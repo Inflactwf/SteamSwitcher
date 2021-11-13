@@ -1,0 +1,1634 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:ed="http://schemas.microsoft.com/expression/2010/drawing" xmlns:local="clr-namespace:Steam_Switcher" xmlns:System="clr-namespace:System;assembly=mscorlib" xmlns:Custom="http://GlowWindow.codeplex.com/" mc:Ignorable="d" x:Name="MainForm" x:Class="Steam_Switcher.MainWindow"
+        Title="Steam Switcher" Height="526" Width="727" ResizeMode="CanMinimize" Icon="SwitcherIcon.ico" WindowStartupLocation="CenterScreen" Loaded="MainForm_Loaded" Closing="MainForm_Closing" BorderBrush="Black" Visibility="Visible"
+    local:GlowManager.EnableGlow="True"
+    local:GlowManager.ActiveGlowBrush="CornflowerBlue"
+    local:GlowManager.InactiveGlowBrush="LightSteelBlue"
+    WindowStyle="None">
+    <WindowChrome.WindowChrome>
+        <WindowChrome x:Name="ChromeFrame" GlassFrameThickness="1"
+                      CornerRadius="0"
+                      CaptionHeight="0"
+                      ResizeBorderThickness="0" />
+    </WindowChrome.WindowChrome>
+    <Window.Resources>
+        <Style TargetType="{x:Type Paragraph}">
+            <Setter Property="Margin"
+                    Value="0" />
+        </Style>
+        <Storyboard x:Key="BorderAnimationGotFocus">
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.BorderThickness)" Storyboard.TargetName="{Binding Name}">
+                <EasingThicknessKeyFrame KeyTime="0:0:0.1" Value="0,0,0,1" />
+            </ThicknessAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="BorderAnimationLostFocus">
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.BorderThickness)" Storyboard.TargetName="{Binding Name}">
+                <EasingThicknessKeyFrame KeyTime="0:0:0.1" Value="0"/>
+            </ThicknessAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="SecretKeyStartAnimation"/>
+    </Window.Resources>
+    <Window.Background>
+        <ImageBrush ImageSource="Resources/BG.jpg" Opacity="0.7" Stretch="UniformToFill">
+            <ImageBrush.RelativeTransform>
+                <TransformGroup>
+                    <ScaleTransform CenterY="0.5" CenterX="0.5" ScaleY="1.05" ScaleX="1.05"/>
+                    <SkewTransform CenterY="0.5" CenterX="0.5"/>
+                    <RotateTransform CenterY="0.5" CenterX="0.5"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </ImageBrush.RelativeTransform>
+        </ImageBrush>
+    </Window.Background>
+    <Border x:Name="FrameBorder" BorderThickness="0" BorderBrush="{Binding (local:GlowManager.ActiveGlowBrush), RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}}" Width="727">
+        <Grid x:Name="FormGrid" HorizontalAlignment="Left" Height="538" VerticalAlignment="Top" Width="725" RenderTransformOrigin="0.536,0.524" Margin="0,0,0,-12">
+            <Grid.Effect>
+                <BlurEffect x:Name="BEffect" Radius="0"/>
+            </Grid.Effect>
+            <Rectangle x:Name="OutlineBorder" HorizontalAlignment="Left" Height="4" Margin="1,521,-1,0" VerticalAlignment="Top" Width="725" RenderTransformOrigin="0.5,0.5" StrokeThickness="0.5" Fill="#FF00294B">
+                <Rectangle.Effect>
+                    <DropShadowEffect BlurRadius="20"/>
+                </Rectangle.Effect>
+            </Rectangle>
+            <Rectangle x:Name="OutlineBorder2" HorizontalAlignment="Left" Height="4" VerticalAlignment="Top" Width="725" StrokeThickness="0.5" RenderTransformOrigin="0.5,0.5" Fill="#FF00294B" Margin="1,0,-1,0">
+                <Rectangle.Effect>
+                    <DropShadowEffect BlurRadius="20"/>
+                </Rectangle.Effect>
+            </Rectangle>
+            <Label x:Name="ExitMessage" Content="Завершение работы..." HorizontalAlignment="Left" Margin="263,375,0,0" VerticalAlignment="Top" Width="199" Foreground="#FFE4E4E4" Background="{x:Null}" FontWeight="Bold" Height="37" FontFamily="Segoe UI Light" FontSize="18" Visibility="Hidden" d:IsLocked="True">
+                <Label.Effect>
+                    <DropShadowEffect Direction="100" ShadowDepth="1" RenderingBias="Quality"/>
+                </Label.Effect>
+            </Label>
+            <Grid x:Name="MovableGrid" HorizontalAlignment="Left" Height="49" Margin="0,5,-2,0" VerticalAlignment="Top" Width="727" RenderTransformOrigin="0.396,0.333" MouseLeftButtonDown="MovableGrid_MouseLeftButtonDown">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="0*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.Background>
+                    <SolidColorBrush Color="Black" Opacity="0.15"/>
+                </Grid.Background>
+                <Label x:Name="LogoLabel" Content="STEAM SWITCHER" TextOptions.TextRenderingMode="Auto" HorizontalAlignment="Left" Margin="52,15,0,0" VerticalAlignment="Top" Width="141" Background="{x:Null}" FontSize="15" FontWeight="Bold" TextOptions.TextHintingMode="Animated">
+                    <Label.Effect>
+                        <DropShadowEffect BlurRadius="3" RenderingBias="Quality" ShadowDepth="2"/>
+                    </Label.Effect>
+                    <Label.Foreground>
+                        <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+                            <GradientStop Color="White"/>
+                            <GradientStop Color="#FF6A6A6A" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Label.Foreground>
+                </Label>
+                <Rectangle x:Name="SteamIcon" HorizontalAlignment="Left" Height="42" VerticalAlignment="Top" Width="42" StrokeThickness="0.5" Margin="10,3,0,0">
+                    <Rectangle.Fill>
+                        <ImageBrush ImageSource="Resources/SteamLogo.png"/>
+                    </Rectangle.Fill>
+                </Rectangle>
+            </Grid>
+            <Grid x:Name="BorderButtonsGrid" HorizontalAlignment="Left" Height="23" Margin="649,5,-1,0" VerticalAlignment="Top" Width="77">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="5*"/>
+                    <RowDefinition Height="7*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="0*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.Effect>
+                    <BlurEffect Radius="1"/>
+                </Grid.Effect>
+                <Grid.Background>
+                    <SolidColorBrush Color="Black" Opacity="0.25"/>
+                </Grid.Background>
+                <Button x:Name="CloseButton" Content="❌" HorizontalAlignment="Left" Margin="51,0,0,0" VerticalAlignment="Top" Width="25" Height="22" BorderBrush="{x:Null}" RenderTransformOrigin="2.125,2.333" FontSize="14" Click="CloseButton_Click" MouseEnter="CloseButton_MouseEnter" MouseLeave="CloseButton_MouseLeave" IsCancel="True" Grid.RowSpan="2">
+                    <Button.Effect>
+                        <DropShadowEffect ShadowDepth="2" BlurRadius="10" Color="#FFB40000"/>
+                    </Button.Effect>
+                    <Button.Foreground>
+                        <SolidColorBrush Color="#FFC70000" Opacity="0.85"/>
+                    </Button.Foreground>
+                    <Button.Background>
+                        <SolidColorBrush Color="#FF3C5D6C" Opacity="0.2"/>
+                    </Button.Background>
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}">
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="true">
+                                    <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type ButtonBase}">
+                                                <Border x:Name="border"
+                                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                                    Padding="{TemplateBinding Padding}"
+                                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                                    Background="{TemplateBinding Background}">
+                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <MultiTrigger>
+                                                        <MultiTrigger.Conditions>
+                                                            <Condition Property="IsMouseOver" Value="True" />
+                                                            <Condition Property="Selector.IsSelected" Value="False" />
+                                                        </MultiTrigger.Conditions>
+                                                        <Setter Property="Background" Value="#FFBEE6FD" />
+                                                    </MultiTrigger>
+                                                    <MultiTrigger>
+                                                        <MultiTrigger.Conditions>
+                                                            <Condition Property="IsMouseOver" Value="True" />
+                                                            <Condition Property="Selector.IsSelected" Value="True" />
+                                                        </MultiTrigger.Conditions>
+                                                        <Setter Property="Background" Value="#BB90EE90" />
+                                                    </MultiTrigger>
+                                                    <MultiTrigger>
+                                                        <MultiTrigger.Conditions>
+                                                            <Condition Property="IsMouseOver" Value="False" />
+                                                            <Condition Property="Selector.IsSelected" Value="True" />
+                                                        </MultiTrigger.Conditions>
+                                                        <Setter Property="Background" Value="LightGreen" />
+                                                    </MultiTrigger>
+
+                                                    <Trigger Property="IsPressed" Value="True">
+                                                        <Setter TargetName="border" Property="Opacity" Value="0.95" />
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+                <Button x:Name="MinimizeButton" Content="_" HorizontalAlignment="Left" VerticalAlignment="Top" Width="25" Height="22" BorderBrush="{x:Null}" RenderTransformOrigin="2.125,2.333" FontSize="14" FontWeight="Bold" FontFamily="Arial" Click="MinimizeButton_Click" MouseEnter="MinimizeButton_MouseEnter" MouseLeave="MinimizeButton_MouseLeave" Grid.RowSpan="2" Margin="26,0,0,0">
+                    <Button.Effect>
+                        <DropShadowEffect BlurRadius="10" ShadowDepth="2" Color="#FF006AB4"/>
+                    </Button.Effect>
+                    <Button.Foreground>
+                        <SolidColorBrush Color="#FF0097FF" Opacity="0.85"/>
+                    </Button.Foreground>
+                    <Button.Background>
+                        <SolidColorBrush Color="#FF3C5D6C" Opacity="0.2"/>
+                    </Button.Background>
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}">
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="true">
+                                    <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type ButtonBase}">
+                                                <Border x:Name="border"
+                                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                                    Padding="{TemplateBinding Padding}"
+                                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                                    Background="{TemplateBinding Background}">
+                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Top" />
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <MultiTrigger>
+                                                        <MultiTrigger.Conditions>
+                                                            <Condition Property="IsMouseOver" Value="True" />
+                                                            <Condition Property="Selector.IsSelected" Value="False" />
+                                                        </MultiTrigger.Conditions>
+                                                        <Setter Property="Background" Value="#FFBEE6FD" />
+                                                    </MultiTrigger>
+                                                    <MultiTrigger>
+                                                        <MultiTrigger.Conditions>
+                                                            <Condition Property="IsMouseOver" Value="True" />
+                                                            <Condition Property="Selector.IsSelected" Value="True" />
+                                                        </MultiTrigger.Conditions>
+                                                        <Setter Property="Background" Value="#BB90EE90" />
+                                                    </MultiTrigger>
+                                                    <MultiTrigger>
+                                                        <MultiTrigger.Conditions>
+                                                            <Condition Property="IsMouseOver" Value="False" />
+                                                            <Condition Property="Selector.IsSelected" Value="True" />
+                                                        </MultiTrigger.Conditions>
+                                                        <Setter Property="Background" Value="LightGreen" />
+                                                    </MultiTrigger>
+
+                                                    <Trigger Property="IsPressed" Value="True">
+                                                        <Setter TargetName="border" Property="Opacity" Value="0.95" />
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+                <Button x:Name="SetDirectoryImage" Content="⛭" HorizontalAlignment="Left" VerticalAlignment="Top" Width="25" Height="22" BorderBrush="{x:Null}" Click="SetDirectoryImage_Click" Margin="1,0,0,0" BorderThickness="1" Foreground="#FF0097FF" FontSize="17" VerticalContentAlignment="Top" HorizontalContentAlignment="Center" Padding="0,-1,0,0" Grid.RowSpan="2" FontFamily="Yu Gothic UI Light" RenderTransformOrigin="0.5,0.466">
+                    <Button.Background>
+                        <SolidColorBrush Color="#FF3C5D6C" Opacity="0.2"/>
+                    </Button.Background>
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}">
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="true">
+                                    <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type ButtonBase}">
+                                                <Border x:Name="border"
+                                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                                    Padding="{TemplateBinding Padding}"
+                                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                                    Background="{TemplateBinding Background}">
+                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <MultiTrigger>
+                                                        <MultiTrigger.Conditions>
+                                                            <Condition Property="IsMouseOver" Value="True" />
+                                                            <Condition Property="Selector.IsSelected" Value="False" />
+                                                        </MultiTrigger.Conditions>
+                                                        <Setter Property="Background" Value="#FFBEE6FD" />
+                                                    </MultiTrigger>
+                                                    <MultiTrigger>
+                                                        <MultiTrigger.Conditions>
+                                                            <Condition Property="IsMouseOver" Value="True" />
+                                                            <Condition Property="Selector.IsSelected" Value="True" />
+                                                        </MultiTrigger.Conditions>
+                                                        <Setter Property="Background" Value="#BB90EE90" />
+                                                    </MultiTrigger>
+                                                    <MultiTrigger>
+                                                        <MultiTrigger.Conditions>
+                                                            <Condition Property="IsMouseOver" Value="False" />
+                                                            <Condition Property="Selector.IsSelected" Value="True" />
+                                                        </MultiTrigger.Conditions>
+                                                        <Setter Property="Background" Value="LightGreen" />
+                                                    </MultiTrigger>
+
+                                                    <Trigger Property="IsPressed" Value="True">
+                                                        <Setter TargetName="border" Property="Opacity" Value="0.95" />
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </Grid>
+            <TabControl x:Name="SwitcherTab" Margin="0,54,-2,87" Style="{DynamicResource ResourceKey=styleTabControl}" SelectionChanged="SwitcherTab_SelectionChanged" Width="727">
+                <TabItem x:Name="InformationTab" Header="Главная" Style="{DynamicResource ResourceKey=styleTabItemLeft}" FontFamily="Yu Gothic UI Semibold" TextOptions.TextHintingMode="Animated">
+                    <Grid x:Name="InfoPanelGrid" Height="427" Margin="-4,-5,-4,-75" VerticalAlignment="Top" HorizontalAlignment="Left" Width="727">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="0*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.Effect>
+                            <DropShadowEffect/>
+                        </Grid.Effect>
+                        <Grid.Background>
+                            <SolidColorBrush Color="Black" Opacity="0.3"/>
+                        </Grid.Background>
+                        <Rectangle Height="26" Margin="327,30,0,0" StrokeThickness="0.5" VerticalAlignment="Top" HorizontalAlignment="Left" Width="5" d:IsHidden="True" Visibility="Hidden">
+                            <Rectangle.Fill>
+                                <LinearGradientBrush EndPoint="3,0.7" StartPoint="0,0" Opacity="0.5">
+                                    <GradientStop Color="#FF00040A" Offset="0.997"/>
+                                    <GradientStop Color="#FF002549"/>
+                                </LinearGradientBrush>
+                            </Rectangle.Fill>
+                        </Rectangle>
+                        <Rectangle x:Name="MainInfoPanel" HorizontalAlignment="Left" Height="427" VerticalAlignment="Top" Width="177" StrokeThickness="0.5" Margin="549,0,0,0" Stroke="#FF001A34" MouseWheel="AccountInformationBorder_MouseWheel">
+                            <Rectangle.Fill>
+                                <SolidColorBrush Color="#FF081221" Opacity="0.3"/>
+                            </Rectangle.Fill>
+                        </Rectangle>
+                        <Grid x:Name="InformationGrid" HorizontalAlignment="Left" Width="513" RenderTransformOrigin="0.474,0.448" Margin="103,152,0,0" Height="105" VerticalAlignment="Top" Visibility="Hidden">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="194*"/>
+                                <ColumnDefinition Width="317*"/>
+                                <ColumnDefinition Width="0*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.Background>
+                                <SolidColorBrush Color="Black" Opacity="0.3"/>
+                            </Grid.Background>
+                            <Rectangle x:Name="InformationBorder" HorizontalAlignment="Left" Height="105" VerticalAlignment="Top" Width="513" Opacity="0.8" StrokeThickness="0.5" Grid.ColumnSpan="2">
+                                <Rectangle.Stroke>
+                                    <SolidColorBrush Color="#FF0097FF" Opacity="0.35"/>
+                                </Rectangle.Stroke>
+                                <Rectangle.Fill>
+                                    <SolidColorBrush Color="Black" Opacity="0.25"/>
+                                </Rectangle.Fill>
+                            </Rectangle>
+                        </Grid>
+                        <Button x:Name="OpenConfirmations" Content="Подтверждения обмена" HorizontalAlignment="Left" VerticalAlignment="Top" Width="145" Style="{DynamicResource CustomButton}" Height="32" Margin="565,113,0,0" Click="OpenConfirmations_Click" FontFamily="Yu Gothic UI Semibold" FontSize="11" Foreground="White" TextOptions.TextHintingMode="Animated" BorderBrush="{x:Null}" BorderThickness="0" IsEnabled="False">
+                            <Button.Resources>
+                                <Style TargetType="{x:Type Border}">
+                                    <Setter Property="CornerRadius" Value="0,0,5,5"/>
+                                </Style>
+                            </Button.Resources>
+                            <Button.Background>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" Opacity="0.5">
+                                    <GradientStop Color="#FF008CFF" Offset="0"/>
+                                    <GradientStop Color="#FF003E70" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Button.Background>
+                        </Button>
+                        <Button IsEnabled="{Binding ElementName=AccountList, Path=SelectedItems.Count}" Style="{DynamicResource CustomButton}" Width="145" VerticalAlignment="Top" RenderTransformOrigin="0.102,0.556" x:Name="ExportBtn" TextOptions.TextRenderingMode="Auto" Margin="565,47,0,0" Height="32" HorizontalAlignment="Left" Foreground="White" Content="Экспорт" FontFamily="Yu Gothic UI Semibold" FontSize="11" Click="ExportBtn_Click" BorderBrush="{x:Null}" TextOptions.TextHintingMode="Animated" BorderThickness="0">
+                            <Button.Resources>
+                                <Style TargetType="{x:Type Border}">
+                                    <Setter Property="CornerRadius" Value="0,0,0,0"/>
+                                </Style>
+                            </Button.Resources>
+                            <Button.Background>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" Opacity="0.5">
+                                    <GradientStop Color="#FF008CFF" Offset="0"/>
+                                    <GradientStop Color="#FF003E70" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Button.Background>
+                        </Button>
+                        <Button Width="145" VerticalAlignment="Top" RenderTransformOrigin="0.102,0.556" x:Name="RefreshSessionBtn" TextOptions.TextRenderingMode="Auto" Margin="565,80,0,0" Height="32" HorizontalAlignment="Left" Foreground="White" Content="Обновить сессию" FontFamily="Yu Gothic UI Semibold" Style="{DynamicResource CustomButton}" FontSize="11" Click="RefreshSessionBtn_Click" BorderBrush="{x:Null}" TextOptions.TextHintingMode="Animated" BorderThickness="0" IsEnabled="False">
+                            <Button.Resources>
+                                <Style TargetType="{x:Type Border}">
+                                    <Setter Property="CornerRadius" Value="0,0,0,0"/>
+                                </Style>
+                            </Button.Resources>
+                            <Button.Background>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" Opacity="0.5">
+                                    <GradientStop Color="#FF008CFF" Offset="0"/>
+                                    <GradientStop Color="#FF003E70" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Button.Background>
+                        </Button>
+                        <Grid x:Name="CopyMainFormGrid" HorizontalAlignment="Left" Height="26" Margin="559,52,0,0" VerticalAlignment="Top" Width="167" RenderTransformOrigin="0,0" Visibility="Hidden">
+                            <Border x:Name="CopyBorder2" BorderThickness="1" HorizontalAlignment="Center" Height="20" Margin="0,4,0,0" VerticalAlignment="Top" Width="131" CornerRadius="5">
+                                <Border.BorderBrush>
+                                    <SolidColorBrush Color="#FF02AF72" Opacity="0.8"/>
+                                </Border.BorderBrush>
+                                <Border.Effect>
+                                    <BlurEffect Radius="3"/>
+                                </Border.Effect>
+                                <Border.Background>
+                                    <SolidColorBrush Color="#FF1FAC00" Opacity="0.05"/>
+                                </Border.Background>
+                            </Border>
+                            <Label x:Name="CopyLabel2" Content="Скопировано" HorizontalAlignment="Center" VerticalAlignment="Top" Width="131" Height="26" Foreground="#FF02AF72" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" BorderThickness="0,0,2,0" FontFamily="Segoe UI Light" FontSize="12" FontWeight="Normal"/>
+                        </Grid>
+                        <Rectangle x:Name="GlowEffect" HorizontalAlignment="Left" Height="63" Margin="565,353,0,0" VerticalAlignment="Top" Width="145" StrokeThickness="2" Opacity="0.8">
+                            <Rectangle.Stroke>
+                                <SolidColorBrush Color="#FF0097FF" Opacity="0.85"/>
+                            </Rectangle.Stroke>
+                            <Rectangle.Fill>
+                                <SolidColorBrush Color="Black" Opacity="0.08"/>
+                            </Rectangle.Fill>
+                            <Rectangle.Effect>
+                                <BlurEffect/>
+                            </Rectangle.Effect>
+                        </Rectangle>
+                        <Button x:Name="LoginButton" IsEnabled="{Binding ElementName=AccountList, Path=SelectedItems.Count}" Content="Войти" HorizontalAlignment="Left" Margin="565,353,0,0" VerticalAlignment="Top" Width="145" Height="62" Foreground="#FF0097FF" FontSize="14" Click="LoginButton_Click" Background="#FFDDDDDD" Style="{DynamicResource MainBlueButton}" IsDefault="True" RenderTransformOrigin="0.731,0.548" FontFamily="Yu Gothic UI Semibold" TextOptions.TextHintingMode="Animated" IsEnabledChanged="LoginButton_IsEnabledChanged">
+                            <Button.Effect>
+                                <DropShadowEffect Color="#FFA1E1FF" ShadowDepth="0" BlurRadius="10"/>
+                            </Button.Effect>
+                        </Button>
+                        <Button IsEnabled="{Binding ElementName=AccountList, Path=SelectedItems.Count}" Width="145" VerticalAlignment="Top" RenderTransformOrigin="0.102,0.556" x:Name="CopyLoginBtn" TextOptions.TextRenderingMode="Auto" Margin="565,207,0,0" Height="32" HorizontalAlignment="Left" Foreground="White" Content="Копировать логин" FontFamily="Yu Gothic UI Semibold" Style="{DynamicResource CustomButton}" FontSize="11" BorderBrush="{x:Null}" TextOptions.TextHintingMode="Animated" Click="CopyLoginBtn_Click" BorderThickness="0">
+                            <Button.Resources>
+                                <Style TargetType="{x:Type Border}">
+                                    <Setter Property="CornerRadius" Value="5,5,0,0"/>
+                                </Style>
+                            </Button.Resources>
+                            <Button.Background>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" Opacity="0.5">
+                                    <GradientStop Color="#FF00559B" Offset="0"/>
+                                    <GradientStop Color="#FF031829" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Button.Background>
+                        </Button>
+                        <Button IsEnabled="{Binding ElementName=AccountList, Path=SelectedItems.Count}" Width="145" VerticalAlignment="Top" RenderTransformOrigin="0.102,0.556" x:Name="CopyPasswordBtn" TextOptions.TextRenderingMode="Auto" Margin="565,240,0,0" Height="32" HorizontalAlignment="Left" Foreground="White" Content="Копировать пароль" FontFamily="Yu Gothic UI Semibold" Style="{DynamicResource CustomButton}" FontSize="11" BorderBrush="{x:Null}" TextOptions.TextHintingMode="Animated" Click="CopyPasswordBtn_Click" BorderThickness="0">
+                            <Button.Resources>
+                                <Style TargetType="{x:Type Border}">
+                                    <Setter Property="CornerRadius" Value="0,0,0,0"/>
+                                </Style>
+                            </Button.Resources>
+                            <Button.Background>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" Opacity="0.5">
+                                    <GradientStop Color="#FF00559B" Offset="0"/>
+                                    <GradientStop Color="#FF031829" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Button.Background>
+                        </Button>
+                        <Button IsEnabled="{Binding ElementName=AccountList, Path=SelectedItems.Count}" Width="145" VerticalAlignment="Top" RenderTransformOrigin="0.102,0.556" x:Name="TwoFactorCodeBox" TextOptions.TextRenderingMode="Auto" Margin="565,283,0,0" Height="35" HorizontalAlignment="Left" Foreground="White" Content="NO SECRET KEY" FontFamily="Yu Gothic UI Semibold" Style="{DynamicResource CustomButton}" BorderBrush="{x:Null}" TextOptions.TextHintingMode="Animated" BorderThickness="0" Click="TwoFactorCodeBox_Click" FontSize="14" Visibility="Visible">
+                            <Button.Resources>
+                                <Style TargetType="{x:Type Border}">
+                                    <Setter Property="CornerRadius" Value="0,0,5,5"/>
+                                </Style>
+                            </Button.Resources>
+                            <Button.Background>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" Opacity="0.5">
+                                    <GradientStop Color="#FF00559B" Offset="0"/>
+                                    <GradientStop Color="#FF031829" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Button.Background>
+                        </Button>
+                        <Rectangle Height="26" Margin="226,30,0,0" StrokeThickness="0.5" VerticalAlignment="Top" HorizontalAlignment="Left" Width="5" Visibility="Hidden" d:IsHidden="True">
+                            <Rectangle.Fill>
+                                <LinearGradientBrush EndPoint="3,0.7" StartPoint="0,0" Opacity="0.5">
+                                    <GradientStop Color="#FF00040A" Offset="0.997"/>
+                                    <GradientStop Color="#FF002549"/>
+                                </LinearGradientBrush>
+                            </Rectangle.Fill>
+                        </Rectangle>
+                        <DockPanel Margin="10,8,183,10">
+                            <ListView x:Name="AccountList" Validation.ErrorTemplate="{x:Null}" ItemsSource="{Binding}" SelectedItem="{Binding SelectedAccount, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" HorizontalAlignment="Left" Height="409" VerticalAlignment="Top" Width="534" Foreground="White" Padding="5,5,0,0" FontFamily="Yu Gothic UI Semibold" SelectionChanged="AccountList_SelectedIndexChanged" FontSize="13" BorderThickness="2" TextOptions.TextHintingMode="Animated" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="False" BorderBrush="#195B99B0" Background="#33000000">
+                                <ListView.Style>
+                                    <Style TargetType="{x:Type ListView}">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="{x:Type ListView}">
+                                                    <Border Name="Border" BorderThickness="2" CornerRadius="0" BorderBrush="#195B99B0" Background="#33000000">
+                                                        <ScrollViewer Margin="0" Focusable="false">
+                                                            <StackPanel Margin="2" IsItemsHost="True" />
+                                                        </ScrollViewer>
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsEnabled" Value="false">
+                                                            <Setter TargetName="Border" Property="Background">
+                                                                <Setter.Value>
+                                                                    <SolidColorBrush Color="{Binding}" />
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                            <Setter TargetName="Border" Property="BorderBrush">
+                                                                <Setter.Value>
+                                                                    <SolidColorBrush Color="{Binding}" />
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                        </Trigger>
+                                                        <Trigger Property="IsGrouping" Value="true">
+                                                            <Setter Property="ScrollViewer.CanContentScroll" Value="false" />
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </ListView.Style>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <DockPanel Margin="5">
+                                            <Image Width="64" Height="64" DockPanel.Dock="Left">
+                                                <Image.Source>
+                                                    <BitmapImage UriSource="{Binding AvatarFilePath}" CacheOption="OnLoad" CreateOptions="IgnoreImageCache" />
+                                                </Image.Source>
+                                            </Image>
+                                            <TextBlock Text="{Binding Login}" Width="300" Height="Auto" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,-2,0,0" FontSize="17"/>
+                                            <TextBlock Text="{Binding Password}" Width="300" Height="Auto" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="-300,0,0,0" FontSize="12" FontFamily="Yu Gothic UI Light" />
+                                            <TextBlock Text="{Binding Note}" Width="500" Height="Auto" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="-300,0,0,0" FontSize="13" TextOptions.TextHintingMode="Animated" FontFamily="Yu Gothic UI Semibold" />
+                                        </DockPanel>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+                                        <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"/>
+                                        <Setter Property="FrameworkElement.FocusVisualStyle" Value="{x:Null}"/>
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+                            </ListView>
+                        </DockPanel>
+                        <Button IsEnabled="{Binding ElementName=AccountList, Path=HasItems}" Width="145" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" x:Name="ReloadCacheBtn" TextOptions.TextRenderingMode="Auto" Margin="565,14,0,0" Height="32" HorizontalAlignment="Left" Foreground="White" Content="Обновить кэш" FontFamily="Yu Gothic UI Semibold" Style="{DynamicResource CustomButton}" FontSize="11" BorderBrush="{x:Null}" TextOptions.TextHintingMode="Animated" Click="ReloadCacheBtn_Click" BorderThickness="0">
+                            <Button.Resources>
+                                <Style TargetType="{x:Type Border}">
+                                    <Setter Property="CornerRadius" Value="5,5,0,0"/>
+                                </Style>
+                            </Button.Resources>
+                            <Button.Background>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" Opacity="0.5">
+                                    <GradientStop Color="#FF008CFF" Offset="0"/>
+                                    <GradientStop Color="#FF003E70" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Button.Background>
+                        </Button>
+                        <ProgressBar x:Name="MobileCodeProgress" HorizontalAlignment="Left" Height="10" Margin="565,273,0,0" VerticalAlignment="Top" Width="145" Maximum="30"/>
+                        <Grid x:Name="CacheRefreshingGrid" HorizontalAlignment="Left" Height="405" VerticalAlignment="Top" Width="530" Margin="12,10,0,0" Background="#E5000000" Visibility="Hidden">
+                            <Label x:Name="RefreshingCacheLabel" Content="Ожидайте, идёт обновление кэша аккаунтов..." HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="Yu Gothic UI Light" FontSize="18" Width="530" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="405" Padding="5,5,5,50">
+                                <Label.Foreground>
+                                    <SolidColorBrush Color="White" Opacity="0.7"/>
+                                </Label.Foreground>
+                            </Label>
+                            <Button x:Name="SkipCacheLoadingBtn" Content="Пропустить" HorizontalAlignment="Left" VerticalAlignment="Top" Width="177" Style="{DynamicResource CustomButton}" Height="32" Margin="179,219,0,0" FontFamily="Yu Gothic UI Semibold" FontSize="11" Foreground="White" TextOptions.TextHintingMode="Animated" BorderBrush="{x:Null}" BorderThickness="0" Click="SkipCacheLoadingBtn_Click">
+                                <Button.Resources>
+                                    <Style TargetType="{x:Type Border}">
+                                        <Setter Property="CornerRadius" Value="2,2,2,2"/>
+                                    </Style>
+                                </Button.Resources>
+                                <Button.Background>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="#FF003663" Offset="0"/>
+                                        <GradientStop Color="#FF003E70" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Button.Background>
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </TabItem>
+                <TabItem x:Name="AccountInformationTab" Header="Аккаунт" IsEnabled="{Binding ElementName=AccountList, Path=SelectedItems.Count}" Style="{DynamicResource ResourceKey=styleTabItemDefault}" FontFamily="Yu Gothic UI Semibold" TextOptions.TextHintingMode="Animated">
+                    <Grid x:Name="AccountInformationGrid" HorizontalAlignment="Left" Height="427" Margin="-4,-5,-4,-75" VerticalAlignment="Top" Width="727">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="0*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.Effect>
+                            <DropShadowEffect/>
+                        </Grid.Effect>
+                        <Grid.Background>
+                            <SolidColorBrush Color="Black" Opacity="0.3"/>
+                        </Grid.Background>
+                        <GroupBox x:Name="AccountInformationBox" Header="" HorizontalAlignment="Left" VerticalAlignment="Top" Height="427" Width="727" Foreground="#FF4186FF" FontSize="20" Background="#FF06162C" BorderThickness="0" FontWeight="Bold" VerticalContentAlignment="Center" Style="{DynamicResource GroupBoxStyle}" Margin="0,1,0,0">
+                            <GroupBox.BorderBrush>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="#FF0594F7" Offset="0"/>
+                                    <GradientStop Color="#FFA40000" Offset="1"/>
+                                </LinearGradientBrush>
+                            </GroupBox.BorderBrush>
+                            <Grid x:Name="AccountInformationGroupBoxGrid" HorizontalAlignment="Left" Height="383" VerticalAlignment="Top" Width="725" Margin="-5,-2,-1,-4">
+                                <Label x:Name="SteamNameLabel" Content="Имя" HorizontalAlignment="Left" Margin="121,10,0,0" VerticalAlignment="Top" Width="287" Height="37" Padding="10,5,5,5" Foreground="White" BorderThickness="1" FontSize="17" FontFamily="Cadara" FontWeight="Bold" BorderBrush="#7F000000" TextOptions.TextHintingMode="Animated" VerticalContentAlignment="Center">
+                                    <Label.Background>
+                                        <SolidColorBrush Color="#FF5CAEFF" Opacity="0.05"/>
+                                    </Label.Background>
+                                </Label>
+                                <Label x:Name="SteamTradeBanLabel" Content="Нет блокировок" HorizontalAlignment="Left" Margin="476,94,0,0" VerticalAlignment="Top" Width="239" Height="37" Padding="0,5,5,5" Foreground="Green" BorderThickness="1" FontSize="14" FontFamily="Cadara" FontWeight="Normal" BorderBrush="#7F008000" TextOptions.TextHintingMode="Animated" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Background="#0C008000"/>
+                                <Label x:Name="SteamPublicityLabel" Content="Скрытый" HorizontalAlignment="Left" Margin="554,10,0,0" VerticalAlignment="Top" Width="161" Height="37" Padding="5" Foreground="White" BorderThickness="1" FontSize="14" FontFamily="Cadara" FontWeight="Normal" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Cursor="" BorderBrush="#7F000000" TextOptions.TextHintingMode="Animated">
+                                    <Label.Background>
+                                        <SolidColorBrush Color="#FF5CAEFF" Opacity="0.05"/>
+                                    </Label.Background>
+                                </Label>
+                                <Label x:Name="SteamStatusLabel" Content="Не в сети" HorizontalAlignment="Left" Margin="554,52,0,0" VerticalAlignment="Top" Width="161" Height="37" Padding="5" Foreground="White" BorderThickness="1" FontSize="14" FontFamily="Cadara" FontWeight="Normal" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" BorderBrush="#7F000000" TextOptions.TextHintingMode="Animated">
+                                    <Label.Background>
+                                        <SolidColorBrush Color="#FF5CAEFF" Opacity="0.05"/>
+                                    </Label.Background>
+                                </Label>
+                                <Label x:Name="SteamLevelLabel"  Content="Уровень: скрыто" HorizontalAlignment="Left" Margin="121,52,0,0" VerticalAlignment="Top" Width="140" Height="37" Padding="10,5,5,5" Foreground="White" BorderThickness="1" FontSize="14" FontFamily="Cadara" FontWeight="Normal" VerticalContentAlignment="Center" BorderBrush="#7F000000" TextOptions.TextHintingMode="Animated">
+                                    <Label.Background>
+                                        <SolidColorBrush Color="#FF5CAEFF" Opacity="0.05"/>
+                                    </Label.Background>
+                                </Label>
+                                <WrapPanel x:Name="AvatarPanel" HorizontalAlignment="Left" Height="98" Margin="12,10,0,0" VerticalAlignment="Top" Width="99"/>
+                                <Rectangle x:Name="SteamStatusRectangle" HorizontalAlignment="Left" Height="98" VerticalAlignment="Top" Width="99" Stroke="DeepSkyBlue" Opacity="0.8" Margin="12,10,0,0" StrokeThickness="2">
+                                    <Rectangle.Fill>
+                                        <SolidColorBrush Color="Black" Opacity="0.15"/>
+                                    </Rectangle.Fill>
+                                    <Rectangle.Effect>
+                                        <DropShadowEffect BlurRadius="20"/>
+                                    </Rectangle.Effect>
+                                </Rectangle>
+                                <Label x:Name="GamesCountLabel" Content="Игры: скрыто" HorizontalAlignment="Left" Margin="121,94,0,0" VerticalAlignment="Top" Width="140" Height="37" Padding="10,5,5,5" Foreground="#FFE4BE13" BorderThickness="1" FontSize="14" FontFamily="Cadara" FontWeight="Normal" VerticalContentAlignment="Center" BorderBrush="#7F000000" TextOptions.TextHintingMode="Animated">
+                                    <Label.Background>
+                                        <SolidColorBrush Color="#FF5CAEFF" Opacity="0.05"/>
+                                    </Label.Background>
+                                </Label>
+                                <Grid x:Name="AccountPanelGrid1" HorizontalAlignment="Left" Height="115" Margin="0,267,0,0" VerticalAlignment="Top" Width="725">
+                                    <Grid.RenderTransform>
+                                        <TranslateTransform />
+                                    </Grid.RenderTransform>
+                                    <Rectangle x:Name="AccountInformationBorder" HorizontalAlignment="Left" Height="115" VerticalAlignment="Top" Width="725" StrokeThickness="0.5" Margin="1,0,-21,-15" Stroke="#FF001A34" MouseWheel="AccountInformationBorder_MouseWheel" Fill="#FF081221"/>
+                                    <Label x:Name="MailLabel" Content="Почта:" HorizontalAlignment="Left" Margin="37,13,0,0" VerticalAlignment="Top" Width="71" Height="24" Padding="10,1,5,0" Foreground="White" BorderThickness="1" FontSize="14" FontFamily="Yu Gothic UI Light" FontWeight="Normal" VerticalContentAlignment="Center" TextOptions.TextHintingMode="Animated" Background="{x:Null}"/>
+                                    <Label x:Name="TradeLinkLabel" Content="Обмен:" HorizontalAlignment="Left" Margin="37,73,0,0" VerticalAlignment="Top" Width="71" Height="24" Padding="10,1,5,0" Foreground="White" BorderThickness="1" FontSize="14" FontFamily="Yu Gothic UI Light" FontWeight="Normal" VerticalContentAlignment="Center" TextOptions.TextHintingMode="Animated" Background="{x:Null}"/>
+                                    <Label x:Name="ProfileLinkLabel" Content="Профиль:" HorizontalAlignment="Left" Margin="37,43,0,0" VerticalAlignment="Top" Width="83" Height="24" Padding="10,1,5,0" Foreground="White" BorderThickness="1" FontSize="14" FontFamily="Yu Gothic UI Light" FontWeight="Normal" VerticalContentAlignment="Center" TextOptions.TextHintingMode="Animated" Background="{x:Null}"/>
+                                    <Button x:Name="CopyTradeBtnPartner" Content="Partner: -" HorizontalAlignment="Left" Margin="324,74,0,0" VerticalAlignment="Top" Width="180" BorderThickness="0" Foreground="White" FontSize="13" FontFamily="Yu Gothic UI Semibold" TextOptions.TextHintingMode="Animated" Height="23" Padding="0,0,0,2" BorderBrush="{x:Null}" FontWeight="Normal" Click="CopyTradeBtn_Click" Style="{DynamicResource CustomButton}">
+                                        <Button.Resources>
+                                            <Style TargetType="{x:Type Border}">
+                                                <Setter Property="CornerRadius" Value="5,0,0,5"/>
+                                            </Style>
+                                        </Button.Resources>
+                                        <Button.Background>
+                                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" Opacity="0.5">
+                                                <GradientStop Color="#FF008CFF"/>
+                                                <GradientStop Color="#FF003E70" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Button.Background>
+                                    </Button>
+                                    <Button x:Name="CopyTradeBtnToken" Content="Token: -" HorizontalAlignment="Left" Margin="509,74,0,0" VerticalAlignment="Top" Width="180" BorderThickness="0" Foreground="White" FontSize="13" FontFamily="Yu Gothic UI Semibold" TextOptions.TextHintingMode="Animated" Height="23" Padding="0,0,0,2" BorderBrush="{x:Null}" FontWeight="Normal" Click="CopyTradeBtn_Click" Style="{DynamicResource CustomButton}">
+                                        <Button.Resources>
+                                            <Style TargetType="{x:Type Border}">
+                                                <Setter Property="CornerRadius" Value="0,5,5,0"/>
+                                            </Style>
+                                        </Button.Resources>
+                                        <Button.Background>
+                                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" Opacity="0.5">
+                                                <GradientStop Color="#FF008CFF"/>
+                                                <GradientStop Color="#FF003E70" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Button.Background>
+                                    </Button>
+                                    <Rectangle HorizontalAlignment="Left" Height="23" Margin="504,74,0,0" StrokeThickness="0.5" VerticalAlignment="Top" Width="5">
+                                        <Rectangle.Fill>
+                                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                                <GradientStop Color="#FF00376E" Offset="0"/>
+                                                <GradientStop Color="#FF001F3E" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Rectangle.Fill>
+                                    </Rectangle>
+                                    <Button x:Name="CopyMailBtn" HorizontalAlignment="Left" Margin="324,14,0,0" VerticalAlignment="Top" Width="180" BorderThickness="0" Foreground="White" FontSize="13" FontFamily="Yu Gothic UI Semibold" TextOptions.TextHintingMode="Animated" Height="23" Padding="0,0,0,2" BorderBrush="{x:Null}" FontWeight="Normal" Click="CopyMailBtn_Click" Style="{DynamicResource CustomButton}" SnapsToDevicePixels="True" Content="Отсутствует">
+                                        <Button.Resources>
+                                            <Style TargetType="{x:Type Border}">
+                                                <Setter Property="CornerRadius" Value="5,0,0,5"/>
+                                            </Style>
+                                        </Button.Resources>
+                                        <Button.Background>
+                                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" Opacity="0.5">
+                                                <GradientStop Color="#FF008CFF"/>
+                                                <GradientStop Color="#FF003E70" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Button.Background>
+                                    </Button>
+                                    <Button x:Name="CopyMailPasswordBtn" Content="Отсутствует" HorizontalAlignment="Left" Margin="509,14,0,0" VerticalAlignment="Top" Width="180" BorderThickness="0" Foreground="White" FontSize="13" FontFamily="Yu Gothic UI Semibold" TextOptions.TextHintingMode="Animated" Height="23" Padding="0,0,0,2" BorderBrush="{x:Null}" FontWeight="Normal" Click="CopyMailPasswordBtn_Click" Style="{DynamicResource CustomButton}">
+                                        <Button.Resources>
+                                            <Style TargetType="{x:Type Border}">
+                                                <Setter Property="CornerRadius" Value="0,5,5,0"/>
+                                            </Style>
+                                        </Button.Resources>
+                                        <Button.Background>
+                                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" Opacity="0.5">
+                                                <GradientStop Color="#FF008CFF"/>
+                                                <GradientStop Color="#FF003E70" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Button.Background>
+                                    </Button>
+                                    <Rectangle Height="23" Margin="504,14,0,0" StrokeThickness="0.5" VerticalAlignment="Top" HorizontalAlignment="Left" Width="5">
+                                        <Rectangle.Fill>
+                                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                                <GradientStop Color="#FF00376E" Offset="0"/>
+                                                <GradientStop Color="#FF001F3E" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Rectangle.Fill>
+                                    </Rectangle>
+                                    <Button x:Name="CopyProfileBtn" Content="-" HorizontalAlignment="Left" Margin="324,44,0,0" VerticalAlignment="Top" Width="180" BorderThickness="0" Foreground="White" FontSize="13" FontFamily="Yu Gothic UI Semibold" TextOptions.TextHintingMode="Animated" Height="23" Padding="0,0,0,2" BorderBrush="{x:Null}" FontWeight="Normal" Style="{DynamicResource CustomButton}" Click="CopyProfileBtn_Click">
+                                        <Button.Resources>
+                                            <Style TargetType="{x:Type Border}">
+                                                <Setter Property="CornerRadius" Value="5,0,0,5"/>
+                                            </Style>
+                                        </Button.Resources>
+                                        <Button.Background>
+                                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" Opacity="0.5">
+                                                <GradientStop Color="#FF008CFF"/>
+                                                <GradientStop Color="#FF003E70" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Button.Background>
+                                    </Button>
+                                    <Button x:Name="OpenProfileBtn" Content="Открыть" HorizontalAlignment="Left" Margin="509,44,0,0" VerticalAlignment="Top" Width="180" BorderThickness="0" Foreground="White" FontSize="13" FontFamily="Yu Gothic UI Semibold" TextOptions.TextHintingMode="Animated" Height="23" Padding="0,0,0,2" BorderBrush="{x:Null}" FontWeight="Normal" Style="{DynamicResource CustomButton}" IsEnabled="False" Click="OpenProfileBtn_Click">
+                                        <Button.Resources>
+                                            <Style TargetType="{x:Type Border}">
+                                                <Setter Property="CornerRadius" Value="0,5,5,0"/>
+                                            </Style>
+                                        </Button.Resources>
+                                        <Button.Background>
+                                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" Opacity="0.5">
+                                                <GradientStop Color="#FF008CFF"/>
+                                                <GradientStop Color="#FF003E70" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Button.Background>
+                                    </Button>
+                                    <Rectangle HorizontalAlignment="Left" Height="23" Margin="504,44,0,0" StrokeThickness="0.5" VerticalAlignment="Top" Width="5">
+                                        <Rectangle.Fill>
+                                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                                <GradientStop Color="#FF00376E" Offset="0"/>
+                                                <GradientStop Color="#FF001F3E" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Rectangle.Fill>
+                                    </Rectangle>
+                                    <Ellipse Fill="#FF081221" HorizontalAlignment="Left" Height="24" Margin="700,45,0,0" Stroke="#FF003A74" StrokeThickness="0.5" VerticalAlignment="Top" Width="24"/>
+                                    <Ellipse Fill="#FF081221" HorizontalAlignment="Left" Height="24" Margin="3,45,0,0" Stroke="#FF003A74" StrokeThickness="0.5" VerticalAlignment="Top" Width="24"/>
+                                    <Button x:Name="ButtonLeftPanel1" Content="🢀" HorizontalAlignment="Left" Margin="0,-1" VerticalAlignment="Top" Width="30" Height="117" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="15" BorderBrush="{x:Null}" Foreground="White" Padding="0" Style="{DynamicResource CustomButton}" Click="ButtonLeftPanel1_Click">
+                                        <Button.Background>
+                                            <SolidColorBrush Color="#FF002A4D" Opacity="0.4"/>
+                                        </Button.Background>
+                                    </Button>
+                                    <Button x:Name="ButtonRightPanel1" Content="🢂" HorizontalAlignment="Left" Margin="697,-1,-2,-1" VerticalAlignment="Top" Width="30" Height="117" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="15" BorderBrush="{x:Null}" Foreground="White" Padding="0" Style="{DynamicResource CustomButton}" Click="ButtonLeftPanel1_Click">
+                                        <Button.Background>
+                                            <SolidColorBrush Color="#FF002A4D" Opacity="0.4"/>
+                                        </Button.Background>
+                                    </Button>
+                                    <Grid x:Name="CopyAccountGrid1" HorizontalAlignment="Left" Height="26" Margin="168,13,0,0" VerticalAlignment="Top" Width="156" RenderTransformOrigin="0,0" Visibility="Hidden">
+                                        <Border x:Name="CopyBorder" BorderThickness="1" HorizontalAlignment="Left" Height="20" Margin="10,3,0,0" VerticalAlignment="Top" Width="131" CornerRadius="5">
+                                            <Border.BorderBrush>
+                                                <SolidColorBrush Color="#FF02AF72" Opacity="0.8"/>
+                                            </Border.BorderBrush>
+                                            <Border.Effect>
+                                                <BlurEffect Radius="3"/>
+                                            </Border.Effect>
+                                            <Border.Background>
+                                                <SolidColorBrush Color="#FF1FAC00" Opacity="0.05"/>
+                                            </Border.Background>
+                                        </Border>
+                                        <Label x:Name="CopyLabel" Content="Скопировано" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,-1,0,0" Width="131" Height="26" Foreground="#FF02AF72" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" BorderThickness="0,0,2,0" FontFamily="Segoe UI Light" FontSize="12" FontWeight="Normal"/>
+                                    </Grid>
+                                </Grid>
+                                <Grid x:Name="AccountPanelGrid2" HorizontalAlignment="Left" Height="115" Margin="0,52,0,0" VerticalAlignment="Top" Width="725" Visibility="Visible" d:IsHidden="True">
+                                    <Grid.RenderTransform>
+                                        <TranslateTransform />
+                                    </Grid.RenderTransform>
+                                    <Rectangle x:Name="AccountInformationBorder1" HorizontalAlignment="Left" Height="115" VerticalAlignment="Top" Width="725" StrokeThickness="0.5" Margin="1,0,-21,-15" Stroke="#FF001A34" MouseWheel="AccountInformationBorder_MouseWheel" Fill="#FF081221"/>
+                                    <Label x:Name="MailLabel1" Content="Shared Secret:" HorizontalAlignment="Left" Margin="37,13,0,0" VerticalAlignment="Top" Width="106" Height="24" Padding="10,1,5,0" Foreground="White" BorderThickness="1" FontSize="14" FontFamily="Yu Gothic UI Light" FontWeight="Normal" VerticalContentAlignment="Center" TextOptions.TextHintingMode="Animated" Background="{x:Null}"/>
+                                    <Label x:Name="TradeLinkLabel1" Content="Steam ID:" HorizontalAlignment="Left" Margin="37,73,0,0" VerticalAlignment="Top" Width="81" Height="24" Padding="10,1,5,0" Foreground="White" BorderThickness="1" FontSize="14" FontFamily="Yu Gothic UI Light" FontWeight="Normal" VerticalContentAlignment="Center" TextOptions.TextHintingMode="Animated" Background="{x:Null}"/>
+                                    <Label x:Name="ProfileLinkLabel1" Content="Identity Secret:" HorizontalAlignment="Left" Margin="37,43,0,0" VerticalAlignment="Top" Width="106" Height="24" Padding="10,1,5,0" Foreground="White" BorderThickness="1" FontSize="14" FontFamily="Yu Gothic UI Light" FontWeight="Normal" VerticalContentAlignment="Center" TextOptions.TextHintingMode="Animated" Background="{x:Null}"/>
+                                    <Button x:Name="SteamIDBtn" Content="-" HorizontalAlignment="Left" Margin="415,74,0,0" VerticalAlignment="Top" Width="274" BorderThickness="0" Foreground="White" FontSize="13" FontFamily="Yu Gothic UI Semibold" TextOptions.TextHintingMode="Animated" Height="23" Padding="0,0,0,2" BorderBrush="{x:Null}" FontWeight="Normal" Style="{DynamicResource CustomButton}" Click="SteamIDBtn_Click">
+                                        <Button.Resources>
+                                            <Style TargetType="{x:Type Border}">
+                                                <Setter Property="CornerRadius" Value="5,5,5,5"/>
+                                            </Style>
+                                        </Button.Resources>
+                                        <Button.Background>
+                                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" Opacity="0.5">
+                                                <GradientStop Color="#FF008CFF"/>
+                                                <GradientStop Color="#FF003E70" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Button.Background>
+                                    </Button>
+                                    <Button x:Name="SharedSecretBtn" HorizontalAlignment="Left" Margin="415,14,0,0" VerticalAlignment="Top" Width="274" BorderThickness="0" Foreground="White" FontSize="13" FontFamily="Yu Gothic UI Semibold" TextOptions.TextHintingMode="Animated" Height="23" Padding="0,0,0,2" BorderBrush="{x:Null}" FontWeight="Normal" Style="{DynamicResource CustomButton}" SnapsToDevicePixels="True" Content="-" Click="SharedSecretBtn_Click">
+                                        <Button.Resources>
+                                            <Style TargetType="{x:Type Border}">
+                                                <Setter Property="CornerRadius" Value="5,5,5,5"/>
+                                            </Style>
+                                        </Button.Resources>
+                                        <Button.Background>
+                                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" Opacity="0.5">
+                                                <GradientStop Color="#FF008CFF"/>
+                                                <GradientStop Color="#FF003E70" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Button.Background>
+                                    </Button>
+                                    <Button x:Name="IdentitySecretBtn" Content="-" HorizontalAlignment="Left" Margin="415,44,0,0" VerticalAlignment="Top" Width="274" BorderThickness="0" Foreground="White" FontSize="13" FontFamily="Yu Gothic UI Semibold" TextOptions.TextHintingMode="Animated" Height="23" Padding="0,0,0,2" BorderBrush="{x:Null}" FontWeight="Normal" Style="{DynamicResource CustomButton}" Click="IdentitySecretBtn_Click">
+                                        <Button.Resources>
+                                            <Style TargetType="{x:Type Border}">
+                                                <Setter Property="CornerRadius" Value="5,5,5,5"/>
+                                            </Style>
+                                        </Button.Resources>
+                                        <Button.Background>
+                                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" Opacity="0.5">
+                                                <GradientStop Color="#FF008CFF"/>
+                                                <GradientStop Color="#FF003E70" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Button.Background>
+                                    </Button>
+                                    <Ellipse Fill="#FF081221" HorizontalAlignment="Left" Height="24" Margin="700,45,0,0" Stroke="#FF003A74" StrokeThickness="0.5" VerticalAlignment="Top" Width="24"/>
+                                    <Ellipse Fill="#FF081221" HorizontalAlignment="Left" Height="24" Margin="3,45,0,0" Stroke="#FF003A74" StrokeThickness="0.5" VerticalAlignment="Top" Width="24"/>
+                                    <Button x:Name="ButtonLeftPanel2" Content="🢀" HorizontalAlignment="Left" Margin="0,-1" VerticalAlignment="Top" Width="30" Height="117" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="15" BorderBrush="{x:Null}" Foreground="White" Padding="0" Style="{DynamicResource CustomButton}" Click="ButtonLeftPanel2_Click">
+                                        <Button.Background>
+                                            <SolidColorBrush Color="#FF002A4D" Opacity="0.4"/>
+                                        </Button.Background>
+                                    </Button>
+                                    <Button x:Name="ButtonRightPanel2" Content="🢂" HorizontalAlignment="Left" Margin="697,-1,-2,-1" VerticalAlignment="Top" Width="30" Height="117" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="15" BorderBrush="{x:Null}" Foreground="White" Padding="0" Style="{DynamicResource CustomButton}" Click="ButtonLeftPanel2_Click">
+                                        <Button.Background>
+                                            <SolidColorBrush Color="#FF002A4D" Opacity="0.4"/>
+                                        </Button.Background>
+                                    </Button>
+                                    <Grid x:Name="CopyAccountGrid2" HorizontalAlignment="Left" Height="26" Margin="254,13,0,0" VerticalAlignment="Top" Width="156" RenderTransformOrigin="0,0" Visibility="Hidden">
+                                        <Border x:Name="CopyBorder1" BorderThickness="1" HorizontalAlignment="Left" Height="20" Margin="10,3,0,0" VerticalAlignment="Top" Width="131" CornerRadius="5">
+                                            <Border.BorderBrush>
+                                                <SolidColorBrush Color="#FF02AF72" Opacity="0.8"/>
+                                            </Border.BorderBrush>
+                                            <Border.Effect>
+                                                <BlurEffect Radius="3"/>
+                                            </Border.Effect>
+                                            <Border.Background>
+                                                <SolidColorBrush Color="#FF1FAC00" Opacity="0.05"/>
+                                            </Border.Background>
+                                        </Border>
+                                        <Label x:Name="CopyLabel1" Content="Скопировано" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,-1,0,0" Width="131" Height="26" Foreground="#FF02AF72" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" BorderThickness="0,0,2,0" FontFamily="Segoe UI Light" FontSize="12" FontWeight="Normal"/>
+                                    </Grid>
+                                </Grid>
+                                <Button x:Name="RefreshSingleAccountBtn" HorizontalAlignment="Left" Margin="520,213,0,0" VerticalAlignment="Top" Width="187" BorderThickness="0" Foreground="White" FontSize="13" FontFamily="Yu Gothic UI Semibold" TextOptions.TextHintingMode="Animated" Height="36" Padding="0" BorderBrush="{x:Null}" FontWeight="Normal" Style="{DynamicResource CustomButton}" SnapsToDevicePixels="True" Content="Обновить информацию" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="RefreshSingleAccountBtn_Click">
+                                    <Button.Resources>
+                                        <Style TargetType="{x:Type Border}">
+                                            <Setter Property="CornerRadius" Value="5,5,5,5"/>
+                                        </Style>
+                                    </Button.Resources>
+                                    <Button.Background>
+                                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" Opacity="0.5">
+                                            <GradientStop Color="#FF008CFF"/>
+                                            <GradientStop Color="#FF003E70" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Button.Background>
+                                </Button>
+                            </Grid>
+                        </GroupBox>
+                    </Grid>
+                </TabItem>
+                <TabItem x:Name="AddTab" Header="Добавить" Style="{DynamicResource ResourceKey=styleTabItemDefault}" FontFamily="Yu Gothic UI Semibold" TextOptions.TextHintingMode="Animated">
+                    <Grid x:Name="AddPanelGrid" HorizontalAlignment="Left" Height="427" Margin="-4,-5,-4,-75" VerticalAlignment="Top" Width="727">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="0*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.Effect>
+                            <DropShadowEffect/>
+                        </Grid.Effect>
+                        <Grid.Background>
+                            <SolidColorBrush Color="Black" Opacity="0.3"/>
+                        </Grid.Background>
+                        <Button Width="139" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" x:Name="ContinueBtn" TextOptions.TextRenderingMode="Auto" Margin="479,359,0,0" Height="36" HorizontalAlignment="Left" FontSize="13" Foreground="White" Content="Добавить" Click="ContinueBtnClick" FontFamily="Yu Gothic UI Semibold" Style="{DynamicResource CustomButton}" BorderThickness="0" TextOptions.TextHintingMode="Animated">
+                            <Button.Resources>
+                                <Style TargetType="{x:Type Border}">
+                                    <Setter Property="CornerRadius" Value="5,5,5,5"/>
+                                </Style>
+                            </Button.Resources>
+                            <Button.Background>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" Opacity="0.5">
+                                    <GradientStop Color="#FF008CFF" Offset="0"/>
+                                    <GradientStop Color="#FF003E70" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Button.Background>
+                        </Button>
+                        <RadioButton
+                            VerticalAlignment="Top" x:Name="RadioMove" Margin="283,338,0,0" HorizontalAlignment="Left" Foreground="#FF1595D1" Content="Переместить" IsChecked="True" FocusVisualStyle="{x:Null}" VerticalContentAlignment="Center" FontFamily="Yu Gothic UI Semilight"/>
+                        <RadioButton
+                            VerticalAlignment="Top" x:Name="RadioCopy" Margin="283,319,0,0" HorizontalAlignment="Left" Foreground="#FF1595D1" Content="Копировать" IsChecked="True" FocusVisualStyle="{x:Null}" VerticalContentAlignment="Center" FontFamily="Yu Gothic UI Semilight"/>
+                        <Button Width="116" VerticalAlignment="Top" x:Name="FindSSFNButton" Margin="277,366,0,0" Height="29" TextOptions.TextRenderingMode="Auto" HorizontalAlignment="Left" FontSize="11" Foreground="White" Content="Выбрать..." Click="FindSSFNButtonClick" RenderTransformOrigin="-0.415,0.586" Style="{DynamicResource CustomButton}" FontFamily="Yu Gothic UI Semibold" BorderThickness="0" TextOptions.TextHintingMode="Animated">
+                            <Button.Resources>
+                                <Style TargetType="{x:Type Border}">
+                                    <Setter Property="CornerRadius" Value="0,5,5,0"/>
+                                </Style>
+                            </Button.Resources>
+                            <Button.Background>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" Opacity="0.5">
+                                    <GradientStop Color="#FF008CFF" Offset="0"/>
+                                    <GradientStop Color="#FF003E70" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Button.Background>
+                        </Button>
+                        <TextBox Width="225" VerticalAlignment="Top" Text="Логин*" x:Name="LoginBox" TextOptions.TextRenderingMode="Auto" Margin="128,31,0,0" Height="28" HorizontalAlignment="Left" CaretBrush="White" TextDecorations="{x:Null}" BorderThickness="0" Padding="0,5,0,0" GotFocus="LoginBox_GotFocus" LostFocus="LoginBox_LostFocus" Foreground="White" TabIndex="0" FontFamily="Segoe UI Semilight" TextAlignment="Center" FontWeight="Bold" >
+                            <TextBox.Triggers>
+                                <EventTrigger RoutedEvent="ButtonBase.GotFocus">
+                                    <BeginStoryboard Storyboard="{StaticResource BorderAnimationGotFocus}"/>
+                                </EventTrigger>
+                                <EventTrigger RoutedEvent="ButtonBase.LostFocus">
+                                    <BeginStoryboard Storyboard="{StaticResource BorderAnimationLostFocus}"/>
+                                </EventTrigger>
+                            </TextBox.Triggers>
+                            <TextBox.SelectionBrush>
+                                <SolidColorBrush
+                                    Color="White" Opacity="0.5"/>
+                            </TextBox.SelectionBrush>
+                            <TextBox.Background>
+                                <SolidColorBrush Color="Black" Opacity="0.25"/>
+                            </TextBox.Background>
+                            <TextBox.BorderBrush>
+                                <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0" Opacity="0.85">
+                                    <GradientStop Color="#FF4D9EFF" Offset="0"/>
+                                    <GradientStop Color="#FF1288FF" Offset="1"/>
+                                </LinearGradientBrush>
+                            </TextBox.BorderBrush>
+                        </TextBox>
+                        <TextBox Width="225" VerticalAlignment="Top" Text="Пароль*" x:Name="PwdBox" TextOptions.TextRenderingMode="Auto" Margin="128,64,0,0" Height="28" HorizontalAlignment="Left" Foreground="White" CaretBrush="White" FontWeight="Bold" TextDecorations="{x:Null}" TextAlignment="Center" Padding="0,5,0,0" BorderThickness="0" GotFocus="PwdBox_GotFocus" LostFocus="PwdBox_LostFocus" TabIndex="1" FontFamily="Segoe UI Semilight">
+                            <TextBox.Triggers>
+                                <EventTrigger RoutedEvent="ButtonBase.GotFocus">
+                                    <BeginStoryboard Storyboard="{StaticResource BorderAnimationGotFocus}"/>
+                                </EventTrigger>
+                                <EventTrigger RoutedEvent="ButtonBase.LostFocus">
+                                    <BeginStoryboard Storyboard="{StaticResource BorderAnimationLostFocus}"/>
+                                </EventTrigger>
+                            </TextBox.Triggers>
+                            <TextBox.SelectionBrush>
+                                <SolidColorBrush
+                                    Color="White" Opacity="0.5"/>
+                            </TextBox.SelectionBrush>
+                            <TextBox.Background>
+                                <SolidColorBrush Color="Black" Opacity="0.25"/>
+                            </TextBox.Background>
+                            <TextBox.BorderBrush>
+                                <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0" Opacity="0.85">
+                                    <GradientStop Color="#FF4D9EFF" Offset="0"/>
+                                    <GradientStop Color="#FF1288FF" Offset="1"/>
+                                </LinearGradientBrush>
+                            </TextBox.BorderBrush>
+                        </TextBox>
+                        <TextBox Width="491" VerticalAlignment="Top" Text="Ссылка на обмен" x:Name="TradeLinkBox" TextOptions.TextRenderingMode="Auto" Margin="128,130,0,0" Height="28" HorizontalAlignment="Left" Foreground="White" CaretBrush="White" FontWeight="Bold" TextDecorations="{x:Null}" TextAlignment="Center" BorderThickness="0" Padding="0,5,0,0" GotFocus="TradeLinkBox_GotFocus" LostFocus="TradeLinkBox_LostFocus" TabIndex="6" FontFamily="Segoe UI Semilight">
+                            <TextBox.Triggers>
+                                <EventTrigger RoutedEvent="ButtonBase.GotFocus">
+                                    <BeginStoryboard Storyboard="{StaticResource BorderAnimationGotFocus}"/>
+                                </EventTrigger>
+                                <EventTrigger RoutedEvent="ButtonBase.LostFocus">
+                                    <BeginStoryboard Storyboard="{StaticResource BorderAnimationLostFocus}"/>
+                                </EventTrigger>
+                            </TextBox.Triggers>
+                            <TextBox.SelectionBrush>
+                                <SolidColorBrush
+                                    Color="White" Opacity="0.5"/>
+                            </TextBox.SelectionBrush>
+                            <TextBox.Background>
+                                <SolidColorBrush Color="Black" Opacity="0.25"/>
+                            </TextBox.Background>
+                            <TextBox.BorderBrush>
+                                <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0" Opacity="0.85">
+                                    <GradientStop Color="#FF4D9EFF" Offset="0"/>
+                                    <GradientStop Color="#FF1288FF" Offset="1"/>
+                                </LinearGradientBrush>
+                            </TextBox.BorderBrush>
+                        </TextBox>
+                        <TextBox Width="225" VerticalAlignment="Top" x:Name="MailBox" TextOptions.TextRenderingMode="Auto" Margin="394,31,0,0" Height="28" HorizontalAlignment="Left" Foreground="White" CaretBrush="White" FontWeight="Bold" TextDecorations="{x:Null}" TextAlignment="Center" BorderThickness="0" Padding="0,5,0,0" GotFocus="MailBox_GotFocus" Text="Почтовый адрес аккаунта" LostFocus="MailBox_LostFocus" TabIndex="3" FontFamily="Segoe UI Semilight">
+                            <TextBox.Triggers>
+                                <EventTrigger RoutedEvent="ButtonBase.GotFocus">
+                                    <BeginStoryboard Storyboard="{StaticResource BorderAnimationGotFocus}"/>
+                                </EventTrigger>
+                                <EventTrigger RoutedEvent="ButtonBase.LostFocus">
+                                    <BeginStoryboard Storyboard="{StaticResource BorderAnimationLostFocus}"/>
+                                </EventTrigger>
+                            </TextBox.Triggers>
+                            <TextBox.SelectionBrush>
+                                <SolidColorBrush
+                                    Color="White" Opacity="0.5"/>
+                            </TextBox.SelectionBrush>
+                            <TextBox.Background>
+                                <SolidColorBrush Color="Black" Opacity="0.25"/>
+                            </TextBox.Background>
+                            <TextBox.BorderBrush>
+                                <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0" Opacity="0.85">
+                                    <GradientStop Color="#FF4D9EFF" Offset="0"/>
+                                    <GradientStop Color="#FF1288FF" Offset="1"/>
+                                </LinearGradientBrush>
+                            </TextBox.BorderBrush>
+                        </TextBox>
+                        <TextBox Width="225" VerticalAlignment="Top" Text="Пароль от почтового ящика" TextOptions.TextRenderingMode="Auto" x:Name="MailPwdBox" Margin="394,64,0,0" Height="28" HorizontalAlignment="Left" Foreground="White" CaretBrush="White" FontWeight="Bold" TextDecorations="{x:Null}" TextAlignment="Center" RenderTransformOrigin="0.604,0.609" BorderThickness="0" Padding="0,5,0,0" GotFocus="MailPwdBox_GotFocus" LostFocus="MailPwdBox_LostFocus" TabIndex="4" FontFamily="Segoe UI Semilight">
+                            <TextBox.Triggers>
+                                <EventTrigger RoutedEvent="ButtonBase.GotFocus">
+                                    <BeginStoryboard Storyboard="{StaticResource BorderAnimationGotFocus}"/>
+                                </EventTrigger>
+                                <EventTrigger RoutedEvent="ButtonBase.LostFocus">
+                                    <BeginStoryboard Storyboard="{StaticResource BorderAnimationLostFocus}"/>
+                                </EventTrigger>
+                            </TextBox.Triggers>
+                            <TextBox.SelectionBrush>
+                                <SolidColorBrush
+                                    Color="White" Opacity="0.5"/>
+                            </TextBox.SelectionBrush>
+                            <TextBox.Background>
+                                <SolidColorBrush Color="Black" Opacity="0.25"/>
+                            </TextBox.Background>
+                            <TextBox.BorderBrush>
+                                <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0" Opacity="0.85">
+                                    <GradientStop Color="#FF4D9EFF" Offset="0"/>
+                                    <GradientStop Color="#FF1288FF" Offset="1"/>
+                                </LinearGradientBrush>
+                            </TextBox.BorderBrush>
+                        </TextBox>
+                        <TextBox Width="176" VerticalAlignment="Top" x:Name="SSFNPathTextBox" Margin="96,317,0,0" Height="78" TextOptions.TextRenderingMode="Auto" HorizontalAlignment="Left" Foreground="White" CaretBrush="White" FontWeight="Bold" TextDecorations="{x:Null}" BorderThickness="2" Padding="5,3,0,0" IsReadOnly="True" FontFamily="Yu Gothic UI Semibold">
+                            <TextBox.SelectionBrush>
+                                <SolidColorBrush
+                                    Color="White" Opacity="0.5"/>
+                            </TextBox.SelectionBrush>
+                            <TextBox.Background>
+                                <SolidColorBrush Color="Black" Opacity="0.35"/>
+                            </TextBox.Background>
+                            <TextBox.BorderBrush>
+                                <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0" Opacity="0.85">
+                                    <GradientStop Color="#FF4D9EFF" Offset="0"/>
+                                    <GradientStop Color="#FF1288FF" Offset="1"/>
+                                </LinearGradientBrush>
+                            </TextBox.BorderBrush>
+                        </TextBox>
+                        <TextBox Width="225" VerticalAlignment="Top" Text="Секретный ключ" x:Name="SharedSecretBox" TextOptions.TextRenderingMode="Auto" Margin="128,97,0,0" Height="28" HorizontalAlignment="Left" Foreground="White" CaretBrush="White" FontWeight="Bold" TextDecorations="{x:Null}" TextAlignment="Center" BorderThickness="0" Padding="0,5,0,0" GotFocus="SharedSecretBox_GotFocus" LostFocus="SharedSecretBox_LostFocus" TabIndex="7" FontFamily="Segoe UI Semilight">
+                            <TextBox.Triggers>
+                                <EventTrigger RoutedEvent="ButtonBase.GotFocus">
+                                    <BeginStoryboard Storyboard="{StaticResource BorderAnimationGotFocus}"/>
+                                </EventTrigger>
+                                <EventTrigger RoutedEvent="ButtonBase.LostFocus">
+                                    <BeginStoryboard Storyboard="{StaticResource BorderAnimationLostFocus}"/>
+                                </EventTrigger>
+                            </TextBox.Triggers>
+                            <TextBox.SelectionBrush>
+                                <SolidColorBrush
+                                    Color="White" Opacity="0.5"/>
+                            </TextBox.SelectionBrush>
+                            <TextBox.Background>
+                                <SolidColorBrush Color="Black" Opacity="0.25"/>
+                            </TextBox.Background>
+                            <TextBox.BorderBrush>
+                                <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0" Opacity="0.85">
+                                    <GradientStop Color="#FF4D9EFF" Offset="0"/>
+                                    <GradientStop Color="#FF1288FF" Offset="1"/>
+                                </LinearGradientBrush>
+                            </TextBox.BorderBrush>
+                        </TextBox>
+                        <Label x:Name="SSFNLabel1" Content="SSFN:" HorizontalAlignment="Left" Margin="96,294,0,0" VerticalAlignment="Top" Width="40" Foreground="#FFB0B0B0" Background="{x:Null}" FontWeight="Medium" FontSize="10" Height="23" FontFamily="Yu Gothic UI Semibold">
+                            <Label.Effect>
+                                <DropShadowEffect Direction="100" ShadowDepth="1" RenderingBias="Quality"/>
+                            </Label.Effect>
+                        </Label>
+                        <Button Width="139" VerticalAlignment="Top" RenderTransformOrigin="0.102,0.556" TextOptions.TextRenderingMode="Auto" x:Name="ResetBtn" Margin="479,287,0,0" Height="26" HorizontalAlignment="Left" Foreground="White" Content="Сброс" FontFamily="Yu Gothic UI Semibold" Click="ResetBtn_Click" Style="{DynamicResource CustomButton}" FontSize="11" TextOptions.TextHintingMode="Animated" BorderThickness="0">
+                            <Button.Resources>
+                                <Style TargetType="{x:Type Border}">
+                                    <Setter Property="CornerRadius" Value="5,5,5,5"/>
+                                </Style>
+                            </Button.Resources>
+                            <Button.Background>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" Opacity="0.5">
+                                    <GradientStop Color="#FF008CFF" Offset="0"/>
+                                    <GradientStop Color="#FF003E70" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Button.Background>
+                        </Button>
+                        <Button Width="139" VerticalAlignment="Top" RenderTransformOrigin="0.102,0.556" x:Name="ImportBtn" TextOptions.TextRenderingMode="Auto" Margin="479,318,0,0" Height="36" HorizontalAlignment="Left" Foreground="White" Content="Импорт" FontFamily="Yu Gothic UI Semibold" Style="{DynamicResource CustomButton}" FontSize="13" Click="ImportBtn_Click" TextOptions.TextHintingMode="Animated" BorderThickness="0">
+                            <Button.Resources>
+                                <Style TargetType="{x:Type Border}">
+                                    <Setter Property="CornerRadius" Value="5,5,5,5"/>
+                                </Style>
+                            </Button.Resources>
+                            <Button.Background>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" Opacity="0.5">
+                                    <GradientStop Color="#FF008CFF" Offset="0"/>
+                                    <GradientStop Color="#FF003E70" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Button.Background>
+                        </Button>
+                        <TextBox Width="225" VerticalAlignment="Top" Text="SteamID*" x:Name="SteamIDBox" TextOptions.TextRenderingMode="Auto" Margin="394,97,0,0" Height="28" HorizontalAlignment="Left" Foreground="White" CaretBrush="White" FontWeight="Bold" TextDecorations="{x:Null}" TextAlignment="Center" BorderThickness="0" Padding="0,5,0,0" TabIndex="7" FontFamily="Segoe UI Semilight" LostFocus="SteamIDBox_LostFocus" GotFocus="SteamIDBox_GotFocus">
+                            <TextBox.Triggers>
+                                <EventTrigger RoutedEvent="ButtonBase.GotFocus">
+                                    <BeginStoryboard Storyboard="{StaticResource BorderAnimationGotFocus}"/>
+                                </EventTrigger>
+                                <EventTrigger RoutedEvent="ButtonBase.LostFocus">
+                                    <BeginStoryboard Storyboard="{StaticResource BorderAnimationLostFocus}"/>
+                                </EventTrigger>
+                            </TextBox.Triggers>
+                            <TextBox.SelectionBrush>
+                                <SolidColorBrush
+                                    Color="White" Opacity="0.5"/>
+                            </TextBox.SelectionBrush>
+                            <TextBox.Background>
+                                <SolidColorBrush Color="Black" Opacity="0.25"/>
+                            </TextBox.Background>
+                            <TextBox.BorderBrush>
+                                <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0" Opacity="0.85">
+                                    <GradientStop Color="#FF4D9EFF" Offset="0"/>
+                                    <GradientStop Color="#FF1288FF" Offset="1"/>
+                                </LinearGradientBrush>
+                            </TextBox.BorderBrush>
+                        </TextBox>
+                        <TextBox Width="410" VerticalAlignment="Top" x:Name="MaFileTextBox" TextOptions.TextRenderingMode="Auto" Margin="96,196,0,0" Height="28" HorizontalAlignment="Left" Foreground="White" CaretBrush="White" FontWeight="Bold" TextDecorations="{x:Null}" TextAlignment="Center" BorderThickness="2" Padding="0,5,0,0" TabIndex="7" FontFamily="Segoe UI Semilight" IsReadOnly="True" Text=".maFile не выбран">
+                            <TextBox.SelectionBrush>
+                                <SolidColorBrush
+                                    Color="White" Opacity="0.5"/>
+                            </TextBox.SelectionBrush>
+                            <TextBox.Background>
+                                <SolidColorBrush Color="Black" Opacity="0.25"/>
+                            </TextBox.Background>
+                            <TextBox.BorderBrush>
+                                <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0" Opacity="0.85">
+                                    <GradientStop Color="#FF4D9EFF" Offset="0"/>
+                                    <GradientStop Color="#FF1288FF" Offset="1"/>
+                                </LinearGradientBrush>
+                            </TextBox.BorderBrush>
+                        </TextBox>
+                        <Button Width="108" VerticalAlignment="Top" RenderTransformOrigin="0.102,0.556" x:Name="SelectMaBtn" TextOptions.TextRenderingMode="Auto" Margin="511,196,0,0" Height="28" HorizontalAlignment="Left" FontSize="11" Foreground="White" Content="Выбрать..." FontFamily="Yu Gothic UI Semibold" Style="{DynamicResource CustomButton}" Click="SelectMaBtn_Click" BorderThickness="0" TextOptions.TextHintingMode="Animated">
+                            <Button.Resources>
+                                <Style TargetType="{x:Type Border}">
+                                    <Setter Property="CornerRadius" Value="0,5,5,0"/>
+                                </Style>
+                            </Button.Resources>
+                            <Button.Background>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" Opacity="0.5">
+                                    <GradientStop Color="#FF008CFF"/>
+                                    <GradientStop Color="#FF003E70" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Button.Background>
+                        </Button>
+                        <Label x:Name="Add_ImagePlaceHolder7" HorizontalAlignment="Left" Height="28" Margin="362,97,0,0" VerticalAlignment="Top" Width="31" Padding="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
+                            <Label.Background>
+                                <SolidColorBrush Color="Black" Opacity="0.25"/>
+                            </Label.Background>
+                            <Image x:Name="SteamIDIcon" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="20" Source="Resources/TradeLinkIcon.png" RenderTransformOrigin="0.55,1.4"/>
+                        </Label>
+                        <Label x:Name="Add_ImagePlaceHolder2" HorizontalAlignment="Left" Height="28" Margin="96,97,0,0" VerticalAlignment="Top" Width="31" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                            <Label.Background>
+                                <SolidColorBrush Color="Black" Opacity="0.25"/>
+                            </Label.Background>
+                            <Image x:Name="SharedSecretIcon" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="20" Source="Resources/SharedSecretIcon.png" RenderTransformOrigin="0.55,1.4"/>
+                        </Label>
+                        <Label x:Name="Add_ImagePlaceHolder3" HorizontalAlignment="Left" Height="28" Margin="96,130,0,0" VerticalAlignment="Top" Width="31" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                            <Label.Background>
+                                <SolidColorBrush Color="Black" Opacity="0.25"/>
+                            </Label.Background>
+                            <Image x:Name="TradeLinkIcon" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="20" Source="Resources/ProfileIcon.png" RenderTransformOrigin="0.55,1.4"/>
+                        </Label>
+                        <Label x:Name="Add_ImagePlaceHolder1" HorizontalAlignment="Left" Height="28" Margin="96,64,0,0" VerticalAlignment="Top" Width="31" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                            <Label.Background>
+                                <SolidColorBrush Color="Black" Opacity="0.25"/>
+                            </Label.Background>
+                            <Image x:Name="PwdIcon" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="20" Source="Resources/PasswordIcon.png" RenderTransformOrigin="0.55,1.4"/>
+                        </Label>
+                        <Label x:Name="Add_ImagePlaceHolder" HorizontalAlignment="Left" Height="28" Margin="96,31,0,0" VerticalAlignment="Top" Width="31" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                            <Label.Background>
+                                <SolidColorBrush Color="Black" Opacity="0.25"/>
+                            </Label.Background>
+                            <Image x:Name="LoginIcon" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="20" Source="Resources/LoginIcon.png"/>
+                        </Label>
+                        <Label x:Name="Add_ImagePlaceHolder5" HorizontalAlignment="Left" Height="28" Margin="362,31,0,0" VerticalAlignment="Top" Width="31" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                            <Label.Background>
+                                <SolidColorBrush Color="Black" Opacity="0.25"/>
+                            </Label.Background>
+                            <Image x:Name="MailBoxIcon" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="20" Source="Resources/MailBoxIcon.png" RenderTransformOrigin="0.55,1.4"/>
+                        </Label>
+                        <Label x:Name="Add_ImagePlaceHolder6" HorizontalAlignment="Left" Height="28" Margin="362,64,0,0" VerticalAlignment="Top" Width="31" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                            <Label.Background>
+                                <SolidColorBrush Color="Black" Opacity="0.25"/>
+                            </Label.Background>
+                            <Image x:Name="MailPwdIcon" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="20" Source="Resources/MailBoxPwdIcon.png" RenderTransformOrigin="0.55,1.4"/>
+                        </Label>
+                        <TextBox Width="491" VerticalAlignment="Top" Text="Примечание" x:Name="NoteBox" TextOptions.TextRenderingMode="Auto" Margin="128,163,0,0" Height="28" HorizontalAlignment="Left" Foreground="White" CaretBrush="White" FontWeight="Bold" TextDecorations="{x:Null}" TextAlignment="Center" BorderThickness="0" Padding="0,5,0,0" TabIndex="7" FontFamily="Segoe UI Semilight" LostFocus="NoteBox_LostFocus" GotFocus="NoteBox_GotFocus">
+                            <TextBox.Triggers>
+                                <EventTrigger RoutedEvent="ButtonBase.GotFocus">
+                                    <BeginStoryboard Storyboard="{StaticResource BorderAnimationGotFocus}"/>
+                                </EventTrigger>
+                                <EventTrigger RoutedEvent="ButtonBase.LostFocus">
+                                    <BeginStoryboard Storyboard="{StaticResource BorderAnimationLostFocus}"/>
+                                </EventTrigger>
+                            </TextBox.Triggers>
+                            <TextBox.SelectionBrush>
+                                <SolidColorBrush
+                                    Color="White" Opacity="0.5"/>
+                            </TextBox.SelectionBrush>
+                            <TextBox.Background>
+                                <SolidColorBrush Color="Black" Opacity="0.25"/>
+                            </TextBox.Background>
+                            <TextBox.BorderBrush>
+                                <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0" Opacity="0.85">
+                                    <GradientStop Color="#FF4D9EFF" Offset="0"/>
+                                    <GradientStop Color="#FF1288FF" Offset="1"/>
+                                </LinearGradientBrush>
+                            </TextBox.BorderBrush>
+                        </TextBox>
+                        <Label x:Name="Add_ImagePlaceHolder4" HorizontalAlignment="Left" Height="28" Margin="96,163,0,0" VerticalAlignment="Top" Width="31" Padding="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
+                            <Label.Background>
+                                <SolidColorBrush Color="Black" Opacity="0.25"/>
+                            </Label.Background>
+                            <Image x:Name="SteamIDIcon1" HorizontalAlignment="Left" Height="19" VerticalAlignment="Top" Width="19" Source="Resources/InfoImg.png" RenderTransformOrigin="0.55,1.4"/>
+                        </Label>
+                    </Grid>
+                </TabItem>
+                <TabItem x:Name="EditTab" Header="Редактировать" IsEnabled="{Binding ElementName=AccountList, Path=SelectedItems.Count}" Style="{DynamicResource ResourceKey=styleTabItemDefault}" FontFamily="Yu Gothic UI Semibold" TextOptions.TextHintingMode="Animated">
+                    <Grid x:Name="EditPanelGrid" HorizontalAlignment="Left" Height="427" Margin="-4,-5,-4,-75" VerticalAlignment="Top" Width="727">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="0*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.Effect>
+                            <DropShadowEffect/>
+                        </Grid.Effect>
+                        <Grid.Background>
+                            <SolidColorBrush Color="Black" Opacity="0.3"/>
+                        </Grid.Background>
+                        <Button Width="139" VerticalAlignment="Top" RenderTransformOrigin="0.102,0.556" TextOptions.TextRenderingMode="Auto" x:Name="EditContinueBtn" Margin="479,359,0,0" Height="36" HorizontalAlignment="Left" FontSize="14" Foreground="White" Content="Сохранить" Click="EditContinueBtn_Click" FontFamily="Yu Gothic UI Semibold" Style="{DynamicResource CustomButton}" BorderThickness="0" TextOptions.TextHintingMode="Animated">
+                            <Button.Resources>
+                                <Style TargetType="{x:Type Border}">
+                                    <Setter Property="CornerRadius" Value="5,5,5,5"/>
+                                </Style>
+                            </Button.Resources>
+                            <Button.Background>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" Opacity="0.5">
+                                    <GradientStop Color="#FF008CFF" Offset="0"/>
+                                    <GradientStop Color="#FF003E70" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Button.Background>
+                        </Button>
+                        <Button Width="116" VerticalAlignment="Top" TextOptions.TextRenderingMode="Auto" x:Name="EditFindSSFNButton" Margin="277,366,0,0" Height="29" HorizontalAlignment="Left" Foreground="White" Content="Заменить..." Click="EditFindSSFNButtonClick" Style="{DynamicResource CustomButton}" FontFamily="Yu Gothic UI Semibold" BorderThickness="0" TextOptions.TextHintingMode="Animated" FontSize="11">
+                            <Button.Resources>
+                                <Style TargetType="{x:Type Border}">
+                                    <Setter Property="CornerRadius" Value="0,5,5,0"/>
+                                </Style>
+                            </Button.Resources>
+                            <Button.Background>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" Opacity="0.5">
+                                    <GradientStop Color="#FF008CFF" Offset="0"/>
+                                    <GradientStop Color="#FF003E70" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Button.Background>
+                        </Button>
+                        <TextBox Width="225" VerticalAlignment="Top" Text="Логин*" TextOptions.TextRenderingMode="Auto" x:Name="EditLoginBox" Margin="128,31,0,0" Height="28" HorizontalAlignment="Left" Foreground="White" CaretBrush="White" FontWeight="Bold" TextDecorations="{x:Null}" TextAlignment="Center" Padding="0,5,0,0" BorderThickness="0" IsEnabled="False" FontFamily="Segoe UI Semilight">
+                            <TextBox.SelectionBrush>
+                                <SolidColorBrush
+                                    Color="White" Opacity="0.5"/>
+                            </TextBox.SelectionBrush>
+                            <TextBox.Background>
+                                <SolidColorBrush Color="Black" Opacity="0.25"/>
+                            </TextBox.Background>
+                            <TextBox.BorderBrush>
+                                <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0" Opacity="0.85">
+                                    <GradientStop Color="#FF4D9EFF" Offset="0"/>
+                                    <GradientStop Color="#FF1288FF" Offset="1"/>
+                                </LinearGradientBrush>
+                            </TextBox.BorderBrush>
+                        </TextBox>
+                        <TextBox Width="225" VerticalAlignment="Top" Text="Пароль*" x:Name="EditPwdBox" TextOptions.TextRenderingMode="Auto" Margin="128,64,0,0" Height="28" HorizontalAlignment="Left" Foreground="White" CaretBrush="White" FontWeight="Bold" TextDecorations="{x:Null}" TextAlignment="Center" Padding="0,5,0,0" BorderThickness="0" TextChanged="EditPwdBox_TextChanged" GotFocus="EditPwdBox_GotFocus" LostFocus="EditPwdBox_LostFocus" TabIndex="1" FontFamily="Segoe UI Semilight">
+                            <TextBox.Triggers>
+                                <EventTrigger RoutedEvent="ButtonBase.GotFocus">
+                                    <BeginStoryboard Storyboard="{StaticResource BorderAnimationGotFocus}"/>
+                                </EventTrigger>
+                                <EventTrigger RoutedEvent="ButtonBase.LostFocus">
+                                    <BeginStoryboard Storyboard="{StaticResource BorderAnimationLostFocus}"/>
+                                </EventTrigger>
+                            </TextBox.Triggers>
+                            <TextBox.SelectionBrush>
+                                <SolidColorBrush
+                                    Color="White" Opacity="0.5"/>
+                            </TextBox.SelectionBrush>
+                            <TextBox.Background>
+                                <SolidColorBrush Color="Black" Opacity="0.25"/>
+                            </TextBox.Background>
+                            <TextBox.BorderBrush>
+                                <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0" Opacity="0.85">
+                                    <GradientStop Color="#FF4D9EFF" Offset="0"/>
+                                    <GradientStop Color="#FF1288FF" Offset="1"/>
+                                </LinearGradientBrush>
+                            </TextBox.BorderBrush>
+                        </TextBox>
+                        <TextBox Width="491" VerticalAlignment="Top" Text="Ссылка на обмен" x:Name="EditTradeLinkBox" TextOptions.TextRenderingMode="Auto" Margin="128,130,0,0" Height="28" HorizontalAlignment="Left" Foreground="White" CaretBrush="White" FontWeight="Bold" TextDecorations="{x:Null}" TextAlignment="Center" Padding="0,5,0,0" BorderThickness="0" GotFocus="EditTradeLinkBox_GotFocus" LostFocus="EditTradeLinkBox_LostFocus" TabIndex="5" FontFamily="Segoe UI Semilight">
+                            <TextBox.Triggers>
+                                <EventTrigger RoutedEvent="ButtonBase.GotFocus">
+                                    <BeginStoryboard Storyboard="{StaticResource BorderAnimationGotFocus}"/>
+                                </EventTrigger>
+                                <EventTrigger RoutedEvent="ButtonBase.LostFocus">
+                                    <BeginStoryboard Storyboard="{StaticResource BorderAnimationLostFocus}"/>
+                                </EventTrigger>
+                            </TextBox.Triggers>
+                            <TextBox.SelectionBrush>
+                                <SolidColorBrush
+                                    Color="White" Opacity="0.5"/>
+                            </TextBox.SelectionBrush>
+                            <TextBox.Background>
+                                <SolidColorBrush Color="Black" Opacity="0.25"/>
+                            </TextBox.Background>
+                            <TextBox.BorderBrush>
+                                <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0" Opacity="0.85">
+                                    <GradientStop Color="#FF4D9EFF" Offset="0"/>
+                                    <GradientStop Color="#FF1288FF" Offset="1"/>
+                                </LinearGradientBrush>
+                            </TextBox.BorderBrush>
+                        </TextBox>
+                        <TextBox Width="225" VerticalAlignment="Top" x:Name="EditMailBox" TextOptions.TextRenderingMode="Auto" Margin="394,31,0,0" Height="28" HorizontalAlignment="Left" Foreground="White" CaretBrush="White" FontWeight="Bold" TextDecorations="{x:Null}" TextAlignment="Center" Padding="0,5,0,0" BorderThickness="0" GotFocus="EditMailBox_GotFocus" LostFocus="EditMailBox_LostFocus" Text="Почтовый адрес аккаунта" TabIndex="2" FontFamily="Segoe UI Semilight">
+                            <TextBox.Triggers>
+                                <EventTrigger RoutedEvent="ButtonBase.GotFocus">
+                                    <BeginStoryboard Storyboard="{StaticResource BorderAnimationGotFocus}"/>
+                                </EventTrigger>
+                                <EventTrigger RoutedEvent="ButtonBase.LostFocus">
+                                    <BeginStoryboard Storyboard="{StaticResource BorderAnimationLostFocus}"/>
+                                </EventTrigger>
+                            </TextBox.Triggers>
+                            <TextBox.SelectionBrush>
+                                <SolidColorBrush
+                                    Color="White" Opacity="0.5"/>
+                            </TextBox.SelectionBrush>
+                            <TextBox.Background>
+                                <SolidColorBrush Color="Black" Opacity="0.25"/>
+                            </TextBox.Background>
+                            <TextBox.BorderBrush>
+                                <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0" Opacity="0.85">
+                                    <GradientStop Color="#FF4D9EFF" Offset="0"/>
+                                    <GradientStop Color="#FF1288FF" Offset="1"/>
+                                </LinearGradientBrush>
+                            </TextBox.BorderBrush>
+                        </TextBox>
+                        <TextBox Width="225" VerticalAlignment="Top" Text="Пароль от почтового ящика" TextOptions.TextRenderingMode="Auto" x:Name="EditMailPwdBox" Margin="394,64,0,0" Height="28" HorizontalAlignment="Left" Foreground="White" CaretBrush="White" FontWeight="Bold" TextDecorations="{x:Null}" TextAlignment="Center" RenderTransformOrigin="0.604,0.609" Padding="0,5,0,0" BorderThickness="0" GotFocus="EditMailPwdBox_GotFocus" LostFocus="EditMailPwdBox_LostFocus" TabIndex="3" FontFamily="Segoe UI Semilight">
+                            <TextBox.Triggers>
+                                <EventTrigger RoutedEvent="ButtonBase.GotFocus">
+                                    <BeginStoryboard Storyboard="{StaticResource BorderAnimationGotFocus}"/>
+                                </EventTrigger>
+                                <EventTrigger RoutedEvent="ButtonBase.LostFocus">
+                                    <BeginStoryboard Storyboard="{StaticResource BorderAnimationLostFocus}"/>
+                                </EventTrigger>
+                            </TextBox.Triggers>
+                            <TextBox.SelectionBrush>
+                                <SolidColorBrush
+                                    Color="White" Opacity="0.5"/>
+                            </TextBox.SelectionBrush>
+                            <TextBox.Background>
+                                <SolidColorBrush Color="Black" Opacity="0.25"/>
+                            </TextBox.Background>
+                            <TextBox.BorderBrush>
+                                <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0" Opacity="0.85">
+                                    <GradientStop Color="#FF4D9EFF" Offset="0"/>
+                                    <GradientStop Color="#FF1288FF" Offset="1"/>
+                                </LinearGradientBrush>
+                            </TextBox.BorderBrush>
+                        </TextBox>
+                        <TextBox Width="176" VerticalAlignment="Top" x:Name="EditSSFNPathTextBox" TextOptions.TextRenderingMode="Auto" Margin="96,317,0,0" Height="78" HorizontalAlignment="Left" Foreground="White" CaretBrush="White" FontWeight="Bold" TextDecorations="{x:Null}" Padding="5,3,0,0" BorderThickness="2" IsReadOnly="True" FontFamily="Yu Gothic UI Semibold">
+                            <TextBox.SelectionBrush>
+                                <SolidColorBrush
+                                    Color="White" Opacity="0.5"/>
+                            </TextBox.SelectionBrush>
+                            <TextBox.Background>
+                                <SolidColorBrush Color="Black" Opacity="0.35"/>
+                            </TextBox.Background>
+                            <TextBox.BorderBrush>
+                                <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0" Opacity="0.85">
+                                    <GradientStop Color="#FF4D9EFF" Offset="0"/>
+                                    <GradientStop Color="#FF1288FF" Offset="1"/>
+                                </LinearGradientBrush>
+                            </TextBox.BorderBrush>
+                        </TextBox>
+                        <TextBox Width="225" VerticalAlignment="Top" Text="Секретный ключ" x:Name="EditSharedSecretBox" TextOptions.TextRenderingMode="Auto" Margin="128,97,0,0" Height="28" HorizontalAlignment="Left" Foreground="White" CaretBrush="White" FontWeight="Bold" TextDecorations="{x:Null}" TextAlignment="Center" BorderThickness="0" Padding="0,5,0,0" GotFocus="EditSharedSecretBox_GotFocus" LostFocus="EditSharedSecretBox_LostFocus" TabIndex="6" FontFamily="Segoe UI Semilight">
+                            <TextBox.Triggers>
+                                <EventTrigger RoutedEvent="ButtonBase.GotFocus">
+                                    <BeginStoryboard Storyboard="{StaticResource BorderAnimationGotFocus}"/>
+                                </EventTrigger>
+                                <EventTrigger RoutedEvent="ButtonBase.LostFocus">
+                                    <BeginStoryboard Storyboard="{StaticResource BorderAnimationLostFocus}"/>
+                                </EventTrigger>
+                            </TextBox.Triggers>
+                            <TextBox.SelectionBrush>
+                                <SolidColorBrush
+                                    Color="White" Opacity="0.5"/>
+                            </TextBox.SelectionBrush>
+                            <TextBox.Background>
+                                <SolidColorBrush Color="Black" Opacity="0.25"/>
+                            </TextBox.Background>
+                            <TextBox.BorderBrush>
+                                <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0" Opacity="0.85">
+                                    <GradientStop Color="#FF4D9EFF" Offset="0"/>
+                                    <GradientStop Color="#FF1288FF" Offset="1"/>
+                                </LinearGradientBrush>
+                            </TextBox.BorderBrush>
+                        </TextBox>
+                        <Label x:Name="SSFNLabel2" Content="Текущие SSFN:" HorizontalAlignment="Left" Margin="96,294,0,0" VerticalAlignment="Top" Width="82" Foreground="#FFB0B0B0" Background="{x:Null}" FontWeight="Medium" FontSize="10" Height="23" FontFamily="Segoe UI Semilight">
+                            <Label.Effect>
+                                <DropShadowEffect Direction="100" ShadowDepth="1" RenderingBias="Quality"/>
+                            </Label.Effect>
+                        </Label>
+                        <TextBox Width="225" VerticalAlignment="Top" Text="SteamID*" x:Name="EditSteamIDBox" TextOptions.TextRenderingMode="Auto" Margin="394,97,0,0" Height="28" HorizontalAlignment="Left" Foreground="White" CaretBrush="White" FontWeight="Bold" TextDecorations="{x:Null}" TextAlignment="Center" BorderThickness="0" Padding="0,5,0,0" TabIndex="7" FontFamily="Segoe UI Semilight" GotFocus="EditSteamIDBox_GotFocus" LostFocus="EditSteamIDBox_LostFocus">
+                            <TextBox.Triggers>
+                                <EventTrigger RoutedEvent="ButtonBase.GotFocus">
+                                    <BeginStoryboard Storyboard="{StaticResource BorderAnimationGotFocus}"/>
+                                </EventTrigger>
+                                <EventTrigger RoutedEvent="ButtonBase.LostFocus">
+                                    <BeginStoryboard Storyboard="{StaticResource BorderAnimationLostFocus}"/>
+                                </EventTrigger>
+                            </TextBox.Triggers>
+                            <TextBox.SelectionBrush>
+                                <SolidColorBrush
+                                    Color="White" Opacity="0.5"/>
+                            </TextBox.SelectionBrush>
+                            <TextBox.Background>
+                                <SolidColorBrush Color="Black" Opacity="0.25"/>
+                            </TextBox.Background>
+                            <TextBox.BorderBrush>
+                                <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0" Opacity="0.85">
+                                    <GradientStop Color="#FF4D9EFF" Offset="0"/>
+                                    <GradientStop Color="#FF1288FF" Offset="1"/>
+                                </LinearGradientBrush>
+                            </TextBox.BorderBrush>
+                        </TextBox>
+                        <TextBox Width="410" VerticalAlignment="Top" x:Name="EditMaFileTextBox" TextOptions.TextRenderingMode="Auto" Margin="96,196,0,0" Height="28" HorizontalAlignment="Left" Foreground="White" CaretBrush="White" FontWeight="Bold" TextDecorations="{x:Null}" TextAlignment="Center" BorderThickness="2" Padding="0,5,0,0" TabIndex="7" FontFamily="Segoe UI Semilight" IsReadOnly="True" Text=".maFile отсутствует">
+                            <TextBox.SelectionBrush>
+                                <SolidColorBrush
+                                    Color="White" Opacity="0.5"/>
+                            </TextBox.SelectionBrush>
+                            <TextBox.Background>
+                                <SolidColorBrush Color="Black" Opacity="0.25"/>
+                            </TextBox.Background>
+                            <TextBox.BorderBrush>
+                                <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0" Opacity="0.85">
+                                    <GradientStop Color="#FF4D9EFF" Offset="0"/>
+                                    <GradientStop Color="#FF1288FF" Offset="1"/>
+                                </LinearGradientBrush>
+                            </TextBox.BorderBrush>
+                        </TextBox>
+                        <Button Width="108" VerticalAlignment="Top" RenderTransformOrigin="0.102,0.556" x:Name="EditSelectMaBtn" TextOptions.TextRenderingMode="Auto" Margin="511,196,0,0" Height="28" HorizontalAlignment="Left" Foreground="White" Content="Изменить..." FontFamily="Yu Gothic UI Semibold" Style="{DynamicResource CustomButton}" Click="EditSelectMaBtn_Click" BorderThickness="0" FontSize="11" TextOptions.TextHintingMode="Animated">
+                            <Button.Resources>
+                                <Style TargetType="{x:Type Border}">
+                                    <Setter Property="CornerRadius" Value="0,5,5,0"/>
+                                </Style>
+                            </Button.Resources>
+                            <Button.Background>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" Opacity="0.5">
+                                    <GradientStop Color="#FF008CFF" Offset="0"/>
+                                    <GradientStop Color="#FF003E70" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Button.Background>
+                        </Button>
+                        <Label x:Name="Edit_ImagePlaceHolder" HorizontalAlignment="Left" Height="28" Margin="96,31,0,0" VerticalAlignment="Top" Width="31" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                            <Label.Background>
+                                <SolidColorBrush Color="Black" Opacity="0.25"/>
+                            </Label.Background>
+                            <Image x:Name="EditLoginIcon" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="20" Source="Resources/LoginIcon.png"/>
+                        </Label>
+                        <Label x:Name="Edit_ImagePlaceHolder7" HorizontalAlignment="Left" Height="28" Margin="362,97,0,0" VerticalAlignment="Top" Width="31" Padding="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
+                            <Label.Background>
+                                <SolidColorBrush Color="Black" Opacity="0.25"/>
+                            </Label.Background>
+                            <Image x:Name="EditSteamIDIcon" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="20" Source="Resources/TradeLinkIcon.png" RenderTransformOrigin="0.55,1.4"/>
+                        </Label>
+                        <Label x:Name="Edit_ImagePlaceHolder2" HorizontalAlignment="Left" Height="28" Margin="96,97,0,0" VerticalAlignment="Top" Width="31" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                            <Label.Background>
+                                <SolidColorBrush Color="Black" Opacity="0.25"/>
+                            </Label.Background>
+                            <Image x:Name="EditSharedSecretIcon" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="20" Source="Resources/SharedSecretIcon.png" RenderTransformOrigin="0.55,1.4"/>
+                        </Label>
+                        <Label x:Name="Edit_ImagePlaceHolder3" HorizontalAlignment="Left" Height="28" Margin="96,130,0,0" VerticalAlignment="Top" Width="31" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                            <Label.Background>
+                                <SolidColorBrush Color="Black" Opacity="0.25"/>
+                            </Label.Background>
+                            <Image x:Name="EditTradeLinkIcon" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="20" Source="Resources/ProfileIcon.png" RenderTransformOrigin="0.55,1.4"/>
+                        </Label>
+                        <Label x:Name="Edit_ImagePlaceHolder1" HorizontalAlignment="Left" Height="28" Margin="96,64,0,0" VerticalAlignment="Top" Width="31" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                            <Label.Background>
+                                <SolidColorBrush Color="Black" Opacity="0.25"/>
+                            </Label.Background>
+                            <Image x:Name="EditPwdIcon" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="20" Source="Resources/PasswordIcon.png" RenderTransformOrigin="0.55,1.4"/>
+                        </Label>
+                        <Label x:Name="Edit_ImagePlaceHolder5" HorizontalAlignment="Left" Height="28" Margin="362,31,0,0" VerticalAlignment="Top" Width="31" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                            <Label.Background>
+                                <SolidColorBrush Color="Black" Opacity="0.25"/>
+                            </Label.Background>
+                            <Image x:Name="EditMailBoxIcon" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="20" Source="Resources/MailBoxIcon.png" RenderTransformOrigin="0.55,1.4"/>
+                        </Label>
+                        <Label x:Name="Edit_ImagePlaceHolder6" HorizontalAlignment="Left" Height="28" Margin="362,64,0,0" VerticalAlignment="Top" Width="31" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                            <Label.Background>
+                                <SolidColorBrush Color="Black" Opacity="0.25"/>
+                            </Label.Background>
+                            <Image x:Name="EditMailPwdIcon" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="20" Source="Resources/MailBoxPwdIcon.png" RenderTransformOrigin="0.55,1.4"/>
+                        </Label>
+                        <TextBox Width="491" VerticalAlignment="Top" Text="Примечание" x:Name="EditNoteBox" TextOptions.TextRenderingMode="Auto" Margin="128,163,0,0" Height="28" HorizontalAlignment="Left" Foreground="White" CaretBrush="White" FontWeight="Bold" TextDecorations="{x:Null}" TextAlignment="Center" BorderThickness="0" Padding="0,5,0,0" TabIndex="7" FontFamily="Segoe UI Semilight" LostFocus="EditNoteBox_LostFocus" GotFocus="EditNoteBox_GotFocus">
+                            <TextBox.Triggers>
+                                <EventTrigger RoutedEvent="ButtonBase.GotFocus">
+                                    <BeginStoryboard Storyboard="{StaticResource BorderAnimationGotFocus}"/>
+                                </EventTrigger>
+                                <EventTrigger RoutedEvent="ButtonBase.LostFocus">
+                                    <BeginStoryboard Storyboard="{StaticResource BorderAnimationLostFocus}"/>
+                                </EventTrigger>
+                            </TextBox.Triggers>
+                            <TextBox.SelectionBrush>
+                                <SolidColorBrush
+                                    Color="White" Opacity="0.5"/>
+                            </TextBox.SelectionBrush>
+                            <TextBox.Background>
+                                <SolidColorBrush Color="Black" Opacity="0.25"/>
+                            </TextBox.Background>
+                            <TextBox.BorderBrush>
+                                <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0" Opacity="0.85">
+                                    <GradientStop Color="#FF4D9EFF" Offset="0"/>
+                                    <GradientStop Color="#FF1288FF" Offset="1"/>
+                                </LinearGradientBrush>
+                            </TextBox.BorderBrush>
+                        </TextBox>
+                        <Label x:Name="Edit_ImagePlaceHolder4" HorizontalAlignment="Left" Height="28" Margin="96,163,0,0" VerticalAlignment="Top" Width="31" Padding="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
+                            <Label.Background>
+                                <SolidColorBrush Color="Black" Opacity="0.25"/>
+                            </Label.Background>
+                            <Image x:Name="EditNoteIcon" HorizontalAlignment="Left" Height="19" VerticalAlignment="Top" Width="19" RenderTransformOrigin="0.55,1.4" Source="Resources/InfoImg.png"/>
+                        </Label>
+                    </Grid>
+                </TabItem>
+                <TabItem x:Name="DeactivateTab" Header="Деактивировать" IsEnabled="{Binding ElementName=AccountList, Path=SelectedItems.Count}" Style="{DynamicResource ResourceKey=styleTabItemRight}" FontFamily="Yu Gothic UI Semibold" Height="28" VerticalAlignment="Top" TextOptions.TextHintingMode="Animated">
+                    <Grid x:Name="DeactivatePanel" HorizontalAlignment="Left" Height="427" Margin="-4,-5,-4,-75" VerticalAlignment="Top" Width="727">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="0*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.Effect>
+                            <DropShadowEffect/>
+                        </Grid.Effect>
+                        <Grid.Background>
+                            <SolidColorBrush Color="Black" Opacity="0.3"/>
+                        </Grid.Background>
+                        <Button Width="66" VerticalAlignment="Top" TextOptions.TextFormattingMode="Display" TextOptions.TextRenderingMode="Auto" x:Name="BackBtn" Margin="231,283,0,0" Height="47" HorizontalAlignment="Left" FontSize="15" Foreground="White" Content="🡸" Style="{DynamicResource CustomButton}" FontFamily="Segoe UI" Click="BackBtn_Click">
+                            <Button.Resources>
+                                <Style TargetType="{x:Type Border}">
+                                    <Setter Property="CornerRadius" Value="5,0,0,5"/>
+                                </Style>
+                            </Button.Resources>
+                            <Button.Background>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" Opacity="0.5">
+                                    <GradientStop Color="#FF008CFF" Offset="0"/>
+                                    <GradientStop Color="#FF003E70" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Button.Background>
+                        </Button>
+                        <Button Width="183" VerticalAlignment="Top" TextOptions.TextRenderingMode="Auto" x:Name="ConfirmDelete" Margin="297,283,0,0" Height="47" HorizontalAlignment="Left" Foreground="White" Content="Деактивировать" Style="{DynamicResource CustomButton}" FontFamily="Yu Gothic UI Semibold" HorizontalContentAlignment="Center" Click="ConfirmDelete_Click" VerticalContentAlignment="Center" Padding="1" FontSize="13" TextOptions.TextHintingMode="Animated">
+                            <Button.Resources>
+                                <Style TargetType="{x:Type Border}">
+                                    <Setter Property="CornerRadius" Value="0,5,5,0"/>
+                                </Style>
+                            </Button.Resources>
+                            <Button.Background>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" Opacity="0.5">
+                                    <GradientStop Color="#FF008CFF" Offset="0"/>
+                                    <GradientStop Color="#FF003E70" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Button.Background>
+                        </Button>
+                        <Label x:Name="DeactivateLabel" Content="Вы действительно хотите деактивировать аккаунт" HorizontalAlignment="Left" Margin="10,139,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Yu Gothic UI Light" FontSize="16" Width="707" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                        <Label x:Name="AccNameLabel" Content="AccountName ?" HorizontalAlignment="Left" Margin="10,170,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Yu Gothic UI Semilight" FontSize="16" Width="707" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" TextOptions.TextHintingMode="Animated"/>
+                        <Rectangle HorizontalAlignment="Left" Height="45" Margin="296,284,0,0" StrokeThickness="0.5" VerticalAlignment="Top" Width="2">
+                            <Rectangle.Fill>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="#FF00376E" Offset="0"/>
+                                    <GradientStop Color="#FF001F3E" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Rectangle.Fill>
+                        </Rectangle>
+                    </Grid>
+                </TabItem>
+            </TabControl>
+            <Grid x:Name="ModalGrid" HorizontalAlignment="Left" Height="524" VerticalAlignment="Top" Width="727" Background="#E5000000" MouseLeftButtonDown="ModalGrid_MouseLeftButtonDown" Margin="0" Visibility="Hidden">
+                <Button x:Name="CopySSAButton" Content="Копировать" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Style="{DynamicResource DefaultBlueButton}" Height="26" Margin="397,416,0,0" FontFamily="Segoe UI Semilight" FontSize="10" Foreground="#FFA1E1FF" Click="CopySSAButton_Click" IsEnabled="False"/>
+                <Rectangle x:Name="MaFileBoard" HorizontalAlignment="Left" Height="93" VerticalAlignment="Top" Width="485" StrokeThickness="0.5" Stroke="#FF0097FF" Opacity="0.8" Margin="118,75,0,0">
+                    <Rectangle.Fill>
+                        <SolidColorBrush Color="Black" Opacity="0.15"/>
+                    </Rectangle.Fill>
+                    <Rectangle.Effect>
+                        <DropShadowEffect BlurRadius="20"/>
+                    </Rectangle.Effect>
+                </Rectangle>
+                <Grid x:Name="maFileGrid" HorizontalAlignment="Left" Height="93" Margin="118,75,0,0" VerticalAlignment="Top" Width="485">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="0*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.Effect>
+                        <DropShadowEffect BlurRadius="150"/>
+                    </Grid.Effect>
+                    <Grid.Background>
+                        <SolidColorBrush Color="Black" Opacity="0.3"/>
+                    </Grid.Background>
+                    <TextBox Width="465" VerticalAlignment="Top" x:Name="MaFileBox" TextOptions.TextRenderingMode="Auto" Margin="10,43,0,0" Height="37" HorizontalAlignment="Left" FontWeight="Bold" TextDecorations="{x:Null}" BorderThickness="2" TextAlignment="Center" Padding="0,7,0,0" FontSize="14" IsReadOnly="True" Text="NO FILE SELECTED" Foreground="#FFC5C5C5" TextOptions.TextFormattingMode="Display" >
+                        <TextBox.CaretBrush>
+                            <SolidColorBrush Color="White" Opacity="0"/>
+                        </TextBox.CaretBrush>
+                        <TextBox.SelectionBrush>
+                            <SolidColorBrush
+                                Color="White" Opacity="0"/>
+                        </TextBox.SelectionBrush>
+                        <TextBox.Background>
+                            <SolidColorBrush Color="Black" Opacity="0.25"/>
+                        </TextBox.Background>
+                        <TextBox.BorderBrush>
+                            <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0" Opacity="0.85">
+                                <GradientStop Color="#FF4D9EFF" Offset="0"/>
+                                <GradientStop Color="#FF1288FF" Offset="1"/>
+                            </LinearGradientBrush>
+                        </TextBox.BorderBrush>
+                    </TextBox>
+                    <Label x:Name="ChooseMaFileLabel" Content="Выберите .maFile для аккаунта: UNKNOWN" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="309" Foreground="#FFB0B0B0" Background="{x:Null}" Height="23" FontWeight="Medium" FontSize="10">
+                        <Label.Effect>
+                            <DropShadowEffect Direction="100" ShadowDepth="1" RenderingBias="Quality"/>
+                        </Label.Effect>
+                    </Label>
+                    <Button x:Name="SelectMaFileBtn" Content="Выбрать..." HorizontalAlignment="Left" VerticalAlignment="Top" Width="73" Style="{DynamicResource DefaultBlueButton}" Height="26" Margin="324,10,0,0" FontFamily="Segoe UI Semilight" FontSize="10" Foreground="#FFA1E1FF" Click="SelectMaFileBtn_Click"/>
+                    <Button x:Name="SkipMaBtn" Content="Пропустить" HorizontalAlignment="Left" VerticalAlignment="Top" Width="73" Style="{DynamicResource DefaultBlueButton}" Height="26" Margin="402,10,0,0" FontFamily="Segoe UI Semilight" FontSize="10" Foreground="#FFA1E1FF" Click="SkipMaBtn_Click"/>
+                </Grid>
+                <Button x:Name="CloseBtn" Content="Закрыть" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Style="{DynamicResource DefaultBlueButton}" Height="26" Margin="502,416,0,0" FontFamily="Segoe UI Semilight" FontSize="10" Foreground="#FFA1E1FF" Click="CloseBtn_Click"/>
+                <TextBox Width="485" VerticalAlignment="Top" x:Name="TextBlockSSA" TextOptions.TextRenderingMode="Auto" Margin="118,173,0,0" Height="238" HorizontalAlignment="Left" TextDecorations="{x:Null}" BorderThickness="2" Padding="4" IsReadOnly="True" Foreground="#FFC5C5C5" TextOptions.TextFormattingMode="Display" TextWrapping="Wrap" AcceptsReturn="True" Text="NO FILE SELECTED" FontSize="14" FontWeight="Bold" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" >
+                    <TextBox.Background>
+                        <SolidColorBrush Color="Black" Opacity="0.25"/>
+                    </TextBox.Background>
+                    <TextBox.BorderBrush>
+                        <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0" Opacity="0.85">
+                            <GradientStop Color="#FF4D9EFF" Offset="0"/>
+                            <GradientStop Color="#FF1288FF" Offset="1"/>
+                        </LinearGradientBrush>
+                    </TextBox.BorderBrush>
+                </TextBox>
+            </Grid>
+            <Grid x:Name="AddModalGrid" HorizontalAlignment="Left" Height="524" VerticalAlignment="Top" Width="727" Background="#E5000000" MouseLeftButtonDown="AddModalGrid_MouseLeftButtonDown" Visibility="Hidden">
+                <Rectangle x:Name="AddSSAFileBoard" HorizontalAlignment="Left" Height="363" VerticalAlignment="Top" Width="485" StrokeThickness="0.5" Stroke="#FF0097FF" Opacity="0.8" Margin="118,75,0,0">
+                    <Rectangle.Fill>
+                        <SolidColorBrush Color="Black" Opacity="0.15"/>
+                    </Rectangle.Fill>
+                    <Rectangle.Effect>
+                        <DropShadowEffect BlurRadius="20"/>
+                    </Rectangle.Effect>
+                </Rectangle>
+                <Grid x:Name="AddSSAFileGrid" HorizontalAlignment="Left" Height="363" Margin="118,75,0,0" VerticalAlignment="Top" Width="485">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="0*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.Effect>
+                        <DropShadowEffect BlurRadius="150"/>
+                    </Grid.Effect>
+                    <Grid.Background>
+                        <SolidColorBrush Color="Black" Opacity="0.3"/>
+                    </Grid.Background>
+                    <TextBox Width="465" VerticalAlignment="Top" x:Name="AddSSAFileBox" TextOptions.TextRenderingMode="Auto" Margin="10,43,0,0" Height="279" HorizontalAlignment="Left" FontWeight="Bold" TextDecorations="{x:Null}" BorderThickness="2" Padding="4" FontSize="14" Text="PASTE THE TEXT HERE" Foreground="#FFC5C5C5" TextOptions.TextFormattingMode="Display" UndoLimit="100000" GotFocus="AddSSAFileBox_GotFocus" LostFocus="AddSSAFileBox_LostFocus" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" TextWrapping="Wrap" AcceptsReturn="True" TextChanged="AddSSAFileBox_TextChanged" >
+                        <TextBox.Background>
+                            <SolidColorBrush Color="Black" Opacity="0.25"/>
+                        </TextBox.Background>
+                        <TextBox.BorderBrush>
+                            <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0" Opacity="0.85">
+                                <GradientStop Color="#FF4D9EFF" Offset="0"/>
+                                <GradientStop Color="#FF1288FF" Offset="1"/>
+                            </LinearGradientBrush>
+                        </TextBox.BorderBrush>
+                    </TextBox>
+                    <Label x:Name="AddChooseSSAFileLabel" Content="Выберите .ssa файл, либо вставьте ссылку для активации аккаунта" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="341" Foreground="#FFB0B0B0" Background="{x:Null}" Height="23" FontWeight="Medium" FontSize="10">
+                        <Label.Effect>
+                            <DropShadowEffect Direction="100" ShadowDepth="1" RenderingBias="Quality"/>
+                        </Label.Effect>
+                    </Label>
+                    <Button x:Name="AddSelectSSAFileBtn" Content="Выбрать..." HorizontalAlignment="Left" VerticalAlignment="Top" Width="73" Style="{DynamicResource DefaultBlueButton}" Height="26" Margin="402,10,0,0" FontFamily="Segoe UI Semilight" FontSize="10" Foreground="#FFA1E1FF" Click="AddSelectSSAFileBtn_Click"/>
+                    <Button x:Name="AddCloseBtn" Content="Закрыть" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Style="{DynamicResource DefaultBlueButton}" Height="26" Margin="374,327,0,0" FontFamily="Segoe UI Semilight" FontSize="10" Foreground="#FFA1E1FF" Click="AddCloseBtn_Click"/>
+                    <Button x:Name="ExecuteBtn" Content="Выполнить" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" Style="{DynamicResource DefaultBlueButton}" Height="26" Margin="268,327,0,0" FontFamily="Segoe UI Semilight" FontSize="10" Foreground="#FFA1E1FF" Click="ExecuteBtn_Click"/>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>

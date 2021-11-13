@@ -1,0 +1,86 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local="clr-namespace:Steam_Switcher" mc:Ignorable="d" x:Name="MainWindow" x:Class="Steam_Switcher.ShowNotifyMessage"
+        Title="Steam Switcher Notify" Height="130" Width="461" WindowStyle="None" ResizeMode="NoResize" Foreground="Red" AllowsTransparency="True" Margin="0" Loaded="MainWindow_Loaded" Topmost="True" WindowStartupLocation="Manual" ShowInTaskbar="False"
+        local:GlowManager.EnableGlow="True"
+        local:GlowManager.ActiveGlowBrush="CornflowerBlue"
+        local:GlowManager.InactiveGlowBrush="CornflowerBlue" Background="Black">
+    <Border x:Name="FrameBorder" BorderThickness="1" BorderBrush="{Binding (local:GlowManager.ActiveGlowBrush), RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}}">
+        <Grid x:Name="MainGrid" Width="459" Height="128" Cursor="Hand" MouseDown="MainGrid_MouseDown">
+            <Grid.Background>
+                <RadialGradientBrush>
+                    <GradientStop Color="#FF0B131B" Offset="0.003"/>
+                    <GradientStop Color="#FF04101B" Offset="1"/>
+                </RadialGradientBrush>
+            </Grid.Background>
+            <Label x:Name="NotifyCaptionText" Content="Steam Switcher" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="0.763,1.538" Foreground="#FFE6E6E6" Height="24" Width="364" VerticalContentAlignment="Center" Padding="0" Margin="48,15,0,0" FontSize="15" FontWeight="SemiBold"/>
+            <TextBox x:Name="NotifyText" HorizontalAlignment="Left" Height="69" Margin="24,40,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="411" Foreground="#FF747F89" Padding="0" IsReadOnly="True" Cursor="Hand" BorderBrush="{x:Null}" SelectionBrush="{x:Null}" FontSize="13" BorderThickness="0" PreviewMouseLeftButtonDown="NotifyText_PreviewMouseLeftButtonDown">
+                <TextBox.Effect>
+                    <DropShadowEffect BlurRadius="10" ShadowDepth="0"/>
+                </TextBox.Effect>
+                <TextBox.Background>
+                    <SolidColorBrush Color="White" Opacity="0"/>
+                </TextBox.Background>
+            </TextBox>
+            <Button x:Name="CloseButton" Content="❌" VerticalAlignment="Top" Height="25" RenderTransformOrigin="2.125,2.333" FontSize="14" Click="CloseButton_Click" MouseEnter="CloseButton_MouseEnter" MouseLeave="CloseButton_MouseLeave" BorderBrush="{x:Null}" BorderThickness="1" Margin="434,0,0,0" Foreground="#FF0064C7" Cursor="Arrow">
+                <Button.Effect>
+                    <DropShadowEffect ShadowDepth="2" BlurRadius="10" Color="#FF048DEC"/>
+                </Button.Effect>
+                <Button.Background>
+                    <SolidColorBrush Color="#FF3C566C" Opacity="0.1"/>
+                </Button.Background>
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type ButtonBase}">
+                                            <Border x:Name="border"
+												BorderThickness="{TemplateBinding BorderThickness}"
+												Padding="{TemplateBinding Padding}"
+												BorderBrush="{TemplateBinding BorderBrush}"
+												Background="{TemplateBinding Background}">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <MultiTrigger>
+                                                    <MultiTrigger.Conditions>
+                                                        <Condition Property="IsMouseOver" Value="True" />
+                                                        <Condition Property="Selector.IsSelected" Value="False" />
+                                                    </MultiTrigger.Conditions>
+                                                    <Setter Property="Background" Value="#FFBEE6FD" />
+                                                </MultiTrigger>
+                                                <MultiTrigger>
+                                                    <MultiTrigger.Conditions>
+                                                        <Condition Property="IsMouseOver" Value="True" />
+                                                        <Condition Property="Selector.IsSelected" Value="True" />
+                                                    </MultiTrigger.Conditions>
+                                                    <Setter Property="Background" Value="#BB90EE90" />
+                                                </MultiTrigger>
+                                                <MultiTrigger>
+                                                    <MultiTrigger.Conditions>
+                                                        <Condition Property="IsMouseOver" Value="False" />
+                                                        <Condition Property="Selector.IsSelected" Value="True" />
+                                                    </MultiTrigger.Conditions>
+                                                    <Setter Property="Background" Value="LightGreen" />
+                                                </MultiTrigger>
+
+                                                <Trigger Property="IsPressed" Value="True">
+                                                    <Setter TargetName="border" Property="Opacity" Value="0.95" />
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+            <Image x:Name="IconImage" HorizontalAlignment="Left" Height="16" VerticalAlignment="Top" Width="16" Source="Resources/ErrorImg.png" Margin="24,20,0,0"/>
+
+        </Grid>
+    </Border>
+</Window>

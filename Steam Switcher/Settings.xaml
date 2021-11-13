@@ -1,0 +1,67 @@
+﻿<Window x:Name="SettingsForm" x:Class="Steam_Switcher.Settings"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Настройки" SizeToContent="WidthAndHeight" Height="303" Width="531" ResizeMode="NoResize" Icon="Resources/SettingsIcon.png" WindowStartupLocation="CenterScreen">
+    <Grid x:Name="MainGrid" HorizontalAlignment="Left" VerticalAlignment="Bottom" Height="274">
+        <Grid.Background>
+            <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+                <GradientStop Color="#FF00447E" Offset="0"/>
+                <GradientStop Color="#FF002B34" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+        <Button x:Name="ExitButton" Content="Сохранить" HorizontalAlignment="Left" Margin="356,227,0,0" VerticalAlignment="Top" Width="146" Style="{DynamicResource CustomButton}" Height="37" RenderTransformOrigin="0.579,0.067" FontSize="10" Click="ExitButton_Click" FontFamily="Yu Gothic UI Semibold">
+            <Button.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="5,5,5,5"/>
+                </Style>
+            </Button.Resources>
+            <Button.Background>
+                <SolidColorBrush Color="Black" Opacity="0.5"/>
+            </Button.Background>
+        </Button>
+        <Grid x:Name="InfoPanelGrid" HorizontalAlignment="Left" Height="176" Margin="0,44,0,0" VerticalAlignment="Top" Width="525">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="0*"/>
+                <ColumnDefinition Width="0*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.Background>
+                <SolidColorBrush Color="Black" Opacity="0.3"/>
+            </Grid.Background>
+        </Grid>
+        <Button x:Name="ShowSDABtn" Content="Включить SSA" HorizontalAlignment="Left" Margin="241,227,0,0" VerticalAlignment="Top" Width="110" Style="{DynamicResource CustomButton}" Height="37" RenderTransformOrigin="0.579,0.067" FontSize="10" Click="ShowSDABtn_Click" FontFamily="Yu Gothic UI Semibold">
+            <Button.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="5,5,5,5"/>
+                </Style>
+            </Button.Resources>
+            <Button.Background>
+                <SolidColorBrush Color="Black" Opacity="0.5"/>
+            </Button.Background>
+        </Button>
+        <TextBox x:Name="CurrentPathBox" TextOptions.TextRenderingMode="Auto" HorizontalAlignment="Left" Height="27" Margin="87,8,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="344" Foreground="#FF00B9FF" Padding="0" MinWidth="10" AcceptsReturn="True" AutoWordSelection="True" HorizontalContentAlignment="Center" RenderTransformOrigin="0.462,0.5" VerticalContentAlignment="Center" IsReadOnly="True" IsEnabled="False" Text="E:\Steam">
+            <TextBox.BorderBrush>
+                <SolidColorBrush Color="#FF5B99B0" Opacity="0.1"/>
+            </TextBox.BorderBrush>
+            <TextBox.Background>
+                <SolidColorBrush Color="Red" Opacity="0.2"/>
+            </TextBox.Background>
+        </TextBox>
+        <Label x:Name="CurrentPathLabel" Content="Путь к Steam:" HorizontalAlignment="Left" Margin="4,8,0,0" VerticalAlignment="Top" Width="83" Foreground="#FF9DD2FF" Background="{x:Null}" Height="26" RenderTransformOrigin="0.503,0.478" FontWeight="Medium" FontSize="11">
+            <Label.Effect>
+                <DropShadowEffect Direction="100" ShadowDepth="0" RenderingBias="Quality" BlurRadius="3"/>
+            </Label.Effect>
+        </Label>
+        <Button x:Name="ChangePathBtn" Content="Изменить..." HorizontalAlignment="Left" Margin="436,8,0,0" VerticalAlignment="Top" Width="79" Style="{DynamicResource CustomButton}" Height="27" RenderTransformOrigin="0.579,0.067" FontSize="8.5" Click="ChangePathBtn_Click" FontFamily="Yu Gothic UI Semibold">
+            <Button.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="5,5,5,5"/>
+                </Style>
+            </Button.Resources>
+            <Button.Background>
+                <SolidColorBrush Color="Black" Opacity="0.5"/>
+            </Button.Background>
+        </Button>
+
+    </Grid>
+</Window>

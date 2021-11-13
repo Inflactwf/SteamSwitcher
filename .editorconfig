@@ -1,0 +1,4 @@
+﻿[*.cs]
+
+# CS0657: Недопустимое расположение атрибута для объявления
+dotnet_diagnostic.CS0657.severity = silent
